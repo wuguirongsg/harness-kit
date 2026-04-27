@@ -13,5 +13,3 @@
 
 ## Session 中新发现的约束
 （格式：`[YYYY-MM-DD] 约束描述 — 原因`）
-
-[2026-04-27] template/ 是唯一分发源，install.sh 和 upgrade.sh 只从 template/ 复制 — 防止 .harness/ 运行时状态（session记录、sprint状态）污染分发给用户的模板内容。修改协议文件（SESSION_START.md、SESSION_END.md、hooks/）后，必须同步更新 template/.harness/ 下的对应副本。

@@ -15,6 +15,7 @@ warn()    { echo -e "${YELLOW}⚠${NC} $1"; }
 command -v python3 >/dev/null || { echo "错误：需要 Python3，请先安装 python3（hooks 脚本依赖）"; exit 1; }
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
+TMPL="$SCRIPT_DIR/template"
 
 # 确定目标目录
 if [ -n "$1" ]; then
@@ -35,38 +36,45 @@ echo "安装目标：$TARGET_DIR"
 echo ""
 
 # 复制协议文件
-cp -n "$SCRIPT_DIR/HARNESS_SETUP.md"    "$TARGET_DIR/HARNESS_SETUP.md"    2>/dev/null && success "HARNESS_SETUP.md" || warn "HARNESS_SETUP.md 已存在，跳过"
-cp -n "$SCRIPT_DIR/AGENTS.md"           "$TARGET_DIR/AGENTS.md"           2>/dev/null && success "AGENTS.md" || warn "AGENTS.md 已存在，跳过"
+cp -n "$TMPL/HARNESS_SETUP.md" "$TARGET_DIR/HARNESS_SETUP.md" 2>/dev/null && success "HARNESS_SETUP.md" || warn "HARNESS_SETUP.md 已存在，跳过"
+cp -n "$TMPL/AGENTS.md"        "$TARGET_DIR/AGENTS.md"        2>/dev/null && success "AGENTS.md" || warn "AGENTS.md 已存在，跳过"
 
-# 复制 .harness 模板，排除本项目自身的 session 记录
+# 复制 .harness 协议文件
 mkdir -p "$TARGET_DIR/.harness"
-cp -rn "$SCRIPT_DIR/.harness/SESSION_START.md" "$TARGET_DIR/.harness/SESSION_START.md" 2>/dev/null && success ".harness/SESSION_START.md" || warn ".harness/SESSION_START.md 已存在，跳过"
-cp -rn "$SCRIPT_DIR/.harness/SESSION_END.md"   "$TARGET_DIR/.harness/SESSION_END.md"   2>/dev/null && success ".harness/SESSION_END.md" || warn ".harness/SESSION_END.md 已存在，跳过"
-cp -rn "$SCRIPT_DIR/.harness/hooks"            "$TARGET_DIR/.harness/hooks"            2>/dev/null && success ".harness/hooks/" || warn ".harness/hooks/ 已存在，跳过"
-# 初始化 registry 和 state 目录（不复制本项目的历史记录）
+cp -rn "$TMPL/.harness/SESSION_START.md" "$TARGET_DIR/.harness/SESSION_START.md" 2>/dev/null && success ".harness/SESSION_START.md" || warn ".harness/SESSION_START.md 已存在，跳过"
+cp -rn "$TMPL/.harness/SESSION_END.md"   "$TARGET_DIR/.harness/SESSION_END.md"   2>/dev/null && success ".harness/SESSION_END.md" || warn ".harness/SESSION_END.md 已存在，跳过"
+cp -rn "$TMPL/.harness/hooks"            "$TARGET_DIR/.harness/hooks"            2>/dev/null && success ".harness/hooks/" || warn ".harness/hooks/ 已存在，跳过"
+
+# 初始化 registry（使用干净模板，不携带 harness-kit 自身的历史记录）
 mkdir -p "$TARGET_DIR/.harness/registry/sessions" "$TARGET_DIR/.harness/registry/decisions"
+cp -n "$TMPL/.harness/registry/_index.md"          "$TARGET_DIR/.harness/registry/_index.md"          2>/dev/null && success ".harness/registry/_index.md" || warn ".harness/registry/_index.md 已存在，跳过"
+cp -n "$TMPL/.harness/registry/decisions/init.md"  "$TARGET_DIR/.harness/registry/decisions/init.md"  2>/dev/null && success ".harness/registry/decisions/init.md" || warn ".harness/registry/decisions/init.md 已存在，跳过"
+
+# 初始化 state 目录
 mkdir -p "$TARGET_DIR/.harness/state"
-cp -n "$SCRIPT_DIR/.harness/registry/_index.md" "$TARGET_DIR/.harness/registry/_index.md" 2>/dev/null && success ".harness/registry/_index.md" || warn ".harness/registry/_index.md 已存在，跳过"
+cp -n "$TMPL/.harness/state/features.json"     "$TARGET_DIR/.harness/state/features.json"     2>/dev/null && success ".harness/state/features.json" || warn ".harness/state/features.json 已存在，跳过"
+cp -n "$TMPL/.harness/state/current-sprint.md" "$TARGET_DIR/.harness/state/current-sprint.md" 2>/dev/null && success ".harness/state/current-sprint.md" || warn ".harness/state/current-sprint.md 已存在，跳过"
+cp -n "$TMPL/.harness/state/constraints.md"    "$TARGET_DIR/.harness/state/constraints.md"    2>/dev/null && success ".harness/state/constraints.md" || warn ".harness/state/constraints.md 已存在，跳过"
 
 # 创建 product 目录（需求管理层）
 if [ ! -d "$TARGET_DIR/.harness/product" ]; then
     mkdir -p "$TARGET_DIR/.harness/product"
-    cp "$SCRIPT_DIR/.harness/product/vision.md"  "$TARGET_DIR/.harness/product/vision.md"
-    cp "$SCRIPT_DIR/.harness/product/backlog.md" "$TARGET_DIR/.harness/product/backlog.md"
-    cp "$SCRIPT_DIR/.harness/product/changes.md" "$TARGET_DIR/.harness/product/changes.md"
+    cp "$TMPL/.harness/product/vision.md"  "$TARGET_DIR/.harness/product/vision.md"
+    cp "$TMPL/.harness/product/backlog.md" "$TARGET_DIR/.harness/product/backlog.md"
+    cp "$TMPL/.harness/product/changes.md" "$TARGET_DIR/.harness/product/changes.md"
     success ".harness/product/ 需求管理目录"
 fi
 
 # 写入版本标记
-HARNESS_VERSION=$(cat "$SCRIPT_DIR/.harness/VERSION" 2>/dev/null) || { warn "VERSION 文件缺失，使用 'unknown'"; HARNESS_VERSION="unknown"; }
+HARNESS_VERSION=$(cat "$TMPL/.harness/VERSION" 2>/dev/null) || { warn "VERSION 文件缺失，使用 'unknown'"; HARNESS_VERSION="unknown"; }
 echo "$HARNESS_VERSION" > "$TARGET_DIR/.harness/VERSION"
 success "写入版本标记：$HARNESS_VERSION"
 
 # 复制 Hook 配置
 mkdir -p "$TARGET_DIR/.claude" "$TARGET_DIR/.cursor" "$TARGET_DIR/.cursor/rules"
-cp -n "$SCRIPT_DIR/.claude/settings.json"  "$TARGET_DIR/.claude/settings.json"  2>/dev/null && success ".claude/settings.json" || warn ".claude/settings.json 已存在，跳过"
-cp -n "$SCRIPT_DIR/.cursor/hooks.json"     "$TARGET_DIR/.cursor/hooks.json"     2>/dev/null && success ".cursor/hooks.json" || warn ".cursor/hooks.json 已存在，跳过"
-cp -n "$SCRIPT_DIR/.cursor/rules/karpathy-guidelines.mdc" \
+cp -n "$TMPL/.claude/settings.json"  "$TARGET_DIR/.claude/settings.json"  2>/dev/null && success ".claude/settings.json" || warn ".claude/settings.json 已存在，跳过"
+cp -n "$TMPL/.cursor/hooks.json"     "$TARGET_DIR/.cursor/hooks.json"     2>/dev/null && success ".cursor/hooks.json" || warn ".cursor/hooks.json 已存在，跳过"
+cp -n "$TMPL/.cursor/rules/karpathy-guidelines.mdc" \
       "$TARGET_DIR/.cursor/rules/karpathy-guidelines.mdc" 2>/dev/null \
     && success ".cursor/rules/karpathy-guidelines.mdc" \
     || warn ".cursor/rules/karpathy-guidelines.mdc 已存在，跳过"
@@ -89,10 +97,10 @@ fi
 # 安装 Codex hooks（如果已安装 codex）
 if command -v codex &>/dev/null || [ -f "$TARGET_DIR/.codex/config.toml" ]; then
     mkdir -p "$TARGET_DIR/.codex"
-    cp -n "$SCRIPT_DIR/.codex/codex-hooks.json"  "$TARGET_DIR/.codex/hooks.json"  2>/dev/null \
+    cp -n "$TMPL/.codex/codex-hooks.json"  "$TARGET_DIR/.codex/hooks.json"  2>/dev/null \
         && success "Codex hooks.json 安装完成" \
         || warn ".codex/hooks.json 已存在，跳过"
-    cp -n "$SCRIPT_DIR/.codex/codex-config.toml" "$TARGET_DIR/.codex/config.toml" 2>/dev/null \
+    cp -n "$TMPL/.codex/codex-config.toml" "$TARGET_DIR/.codex/config.toml" 2>/dev/null \
         && success "Codex config.toml 安装完成" \
         || warn ".codex/config.toml 已存在，跳过"
 fi
@@ -100,7 +108,7 @@ fi
 # 安装 OpenCode plugin（如果已安装 opencode）
 if command -v opencode &>/dev/null || [ -f "$TARGET_DIR/.opencode/opencode.json" ]; then
     mkdir -p "$TARGET_DIR/.opencode/plugin"
-    cp -n "$SCRIPT_DIR/.opencode/plugin/harness-opencode-plugin.ts" \
+    cp -n "$TMPL/.opencode/plugin/harness-opencode-plugin.ts" \
           "$TARGET_DIR/.opencode/plugin/harness-opencode-plugin.ts" 2>/dev/null \
         && success "OpenCode plugin 安装完成（.opencode/plugin/harness-opencode-plugin.ts）" \
         || warn ".opencode/plugin/harness-opencode-plugin.ts 已存在，跳过"

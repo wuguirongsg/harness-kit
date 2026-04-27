@@ -21,8 +21,9 @@ warn()    { echo -e "${YELLOW}[harness]${NC} ⚠ $1"; }
 error()   { echo -e "${RED}[harness]${NC} ✗ $1"; exit 1; }
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+TMPL="$SCRIPT_DIR/template"
 HARNESS_DIR=".harness"
-TARGET_VERSION=$(cat "$SCRIPT_DIR/$HARNESS_DIR/VERSION" 2>/dev/null) \
+TARGET_VERSION=$(cat "$TMPL/$HARNESS_DIR/VERSION" 2>/dev/null) \
     || error "harness-kit 源包缺少 VERSION 文件，请检查安装包完整性"
 
 # ── 检查是否在项目目录（宽松检查，支持 .harness/ 已被误删的情况）───
@@ -82,37 +83,37 @@ echo ""
 info "更新协议文件..."
 mkdir -p "$HARNESS_DIR/hooks"
 
-cp "$SCRIPT_DIR/$HARNESS_DIR/SESSION_START.md" "$HARNESS_DIR/SESSION_START.md"
+cp "$TMPL/$HARNESS_DIR/SESSION_START.md" "$HARNESS_DIR/SESSION_START.md"
 success "SESSION_START.md"
 
-cp "$SCRIPT_DIR/$HARNESS_DIR/SESSION_END.md" "$HARNESS_DIR/SESSION_END.md"
+cp "$TMPL/$HARNESS_DIR/SESSION_END.md" "$HARNESS_DIR/SESSION_END.md"
 success "SESSION_END.md"
 
-cp -r "$SCRIPT_DIR/$HARNESS_DIR/hooks/." "$HARNESS_DIR/hooks/"
+cp -r "$TMPL/$HARNESS_DIR/hooks/." "$HARNESS_DIR/hooks/"
 chmod +x "$HARNESS_DIR/hooks/"*.sh
 success "hooks/"
 
-cp "$SCRIPT_DIR/HARNESS_SETUP.md" "HARNESS_SETUP.md"
+cp "$TMPL/HARNESS_SETUP.md" "HARNESS_SETUP.md"
 success "HARNESS_SETUP.md"
 
 mkdir -p .claude .cursor .cursor/rules
-cp "$SCRIPT_DIR/.claude/settings.json"  ".claude/settings.json"
+cp "$TMPL/.claude/settings.json"  ".claude/settings.json"
 success ".claude/settings.json"
-cp "$SCRIPT_DIR/.cursor/hooks.json"     ".cursor/hooks.json"
+cp "$TMPL/.cursor/hooks.json"     ".cursor/hooks.json"
 success ".cursor/hooks.json"
-cp "$SCRIPT_DIR/.cursor/rules/karpathy-guidelines.mdc" ".cursor/rules/karpathy-guidelines.mdc"
+cp "$TMPL/.cursor/rules/karpathy-guidelines.mdc" ".cursor/rules/karpathy-guidelines.mdc"
 success ".cursor/rules/karpathy-guidelines.mdc"
 
-if [ -f "$SCRIPT_DIR/.codex/codex-hooks.json" ]; then
+if [ -f "$TMPL/.codex/codex-hooks.json" ]; then
     mkdir -p .codex
-    cp "$SCRIPT_DIR/.codex/codex-hooks.json"   ".codex/hooks.json"
-    cp "$SCRIPT_DIR/.codex/codex-config.toml"  ".codex/config.toml" 2>/dev/null || true
+    cp "$TMPL/.codex/codex-hooks.json"   ".codex/hooks.json"
+    cp "$TMPL/.codex/codex-config.toml"  ".codex/config.toml" 2>/dev/null || true
     success ".codex/hooks.json"
 fi
 
-if [ -f "$SCRIPT_DIR/.opencode/plugin/harness-opencode-plugin.ts" ]; then
+if [ -f "$TMPL/.opencode/plugin/harness-opencode-plugin.ts" ]; then
     mkdir -p .opencode/plugin
-    cp "$SCRIPT_DIR/.opencode/plugin/harness-opencode-plugin.ts" \
+    cp "$TMPL/.opencode/plugin/harness-opencode-plugin.ts" \
        ".opencode/plugin/harness-opencode-plugin.ts"
     success ".opencode/plugin/harness-opencode-plugin.ts"
 fi
@@ -141,15 +142,15 @@ _create_if_missing() {
 }
 
 _create_if_missing \
-    "$SCRIPT_DIR/$HARNESS_DIR/registry/_index.md" \
+    "$TMPL/$HARNESS_DIR/registry/_index.md" \
     "$HARNESS_DIR/registry/_index.md" \
     ".harness/registry/_index.md"
 
 if [ ! -d "$HARNESS_DIR/product" ]; then
     mkdir -p "$HARNESS_DIR/product"
-    cp "$SCRIPT_DIR/$HARNESS_DIR/product/vision.md"  "$HARNESS_DIR/product/vision.md"
-    cp "$SCRIPT_DIR/$HARNESS_DIR/product/backlog.md" "$HARNESS_DIR/product/backlog.md"
-    cp "$SCRIPT_DIR/$HARNESS_DIR/product/changes.md" "$HARNESS_DIR/product/changes.md"
+    cp "$TMPL/$HARNESS_DIR/product/vision.md"  "$HARNESS_DIR/product/vision.md"
+    cp "$TMPL/$HARNESS_DIR/product/backlog.md" "$HARNESS_DIR/product/backlog.md"
+    cp "$TMPL/$HARNESS_DIR/product/changes.md" "$HARNESS_DIR/product/changes.md"
     # 标记为待初始化：下次 session-start 时 Claude 会自动根据项目信息填写
     printf '<!-- HARNESS_NEEDS_INIT -->\n\n' > /tmp/_harness_vision_tmp
     cat "$HARNESS_DIR/product/vision.md" >> /tmp/_harness_vision_tmp
@@ -159,17 +160,17 @@ if [ ! -d "$HARNESS_DIR/product" ]; then
 fi
 
 _create_if_missing \
-    "$SCRIPT_DIR/$HARNESS_DIR/state/features.json" \
+    "$TMPL/$HARNESS_DIR/state/features.json" \
     "$HARNESS_DIR/state/features.json" \
     ".harness/state/features.json"
 
 _create_if_missing \
-    "$SCRIPT_DIR/$HARNESS_DIR/state/current-sprint.md" \
+    "$TMPL/$HARNESS_DIR/state/current-sprint.md" \
     "$HARNESS_DIR/state/current-sprint.md" \
     ".harness/state/current-sprint.md"
 
 _create_if_missing \
-    "$SCRIPT_DIR/$HARNESS_DIR/state/constraints.md" \
+    "$TMPL/$HARNESS_DIR/state/constraints.md" \
     "$HARNESS_DIR/state/constraints.md" \
     ".harness/state/constraints.md"
 

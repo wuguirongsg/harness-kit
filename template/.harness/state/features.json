@@ -1,0 +1,7 @@
+{
+  "_readme": "只允许把 passes 从 false 改成 true。禁止删除条目或修改 description。违反视为严重错误。",
+  "_project": "（由 HARNESS_SETUP 填入）",
+  "_sprint": "第一阶段",
+  "_updated": "（由 SESSION_END 自动更新）",
+  "features": []
+}
