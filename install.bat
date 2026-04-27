@@ -76,8 +76,10 @@ if not exist "!TARGET_DIR!\.harness\product" (
 :: ── Hook 配置 ────────────────────────────────────────────────────
 if not exist "!TARGET_DIR!\.claude" md "!TARGET_DIR!\.claude"
 if not exist "!TARGET_DIR!\.cursor" md "!TARGET_DIR!\.cursor"
+if not exist "!TARGET_DIR!\.cursor\rules" md "!TARGET_DIR!\.cursor\rules"
 call :copy_file "!SCRIPT_DIR!\.claude\settings.json" "!TARGET_DIR!\.claude\settings.json"
 call :copy_file "!SCRIPT_DIR!\.cursor\hooks.json"    "!TARGET_DIR!\.cursor\hooks.json"
+call :copy_file "!SCRIPT_DIR!\.cursor\rules\karpathy-guidelines.mdc" "!TARGET_DIR!\.cursor\rules\karpathy-guidelines.mdc"
 
 :: ── CLAUDE.md 和 .cursorrules ────────────────────────────────────
 call :copy_file "!TARGET_DIR!\AGENTS.md" "!TARGET_DIR!\CLAUDE.md"

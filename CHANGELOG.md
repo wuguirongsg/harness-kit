@@ -5,6 +5,32 @@
 
 ---
 
+## [0.4.0] — 2026-04-27
+
+### 新增
+- `.cursor/rules/karpathy-guidelines.mdc` — Karpathy 编码行为准则（Cursor `alwaysApply: true`）
+  - 编码前先思考：明确理解、列方案、选最简单的
+  - 简洁优先：最少代码，不加推测性内容
+  - 外科手术式修改：只改必须改的，清理自己制造的孤儿代码
+  - 目标驱动执行：定义可验证的成功标准，循环验证
+- `SESSION_START.md` 新增"编码前置原则"区块，每次 Session 加载时自动生效
+- `SESSION_END.md` 新增验收自检清单（标 `passes=true` 前逐条确认）
+- `HARNESS_SETUP.md` Q4 新增验收标准格式，features.json 模板新增 `acceptance` 字段
+
+### 变更
+- `install.sh` / `install.bat`：新安装时写入 `.cursor/rules/karpathy-guidelines.mdc`
+- `upgrade.sh`：升级时自动替换 karpathy-guidelines.mdc（协议文件），备份 `.cursor/rules/`
+- `upgrade.sh`：修复 commit-msg hook 升级仍用 heredoc 的问题，改为从 `.harness/hooks/commit-msg` 复制
+
+### 升级方式
+```bash
+bash /path/to/harness-kit/upgrade.sh
+```
+
+旧版本升级后 Cursor 用户立即获得 Karpathy 行为准则。features.json 中可按需补充 `acceptance` 字段（可选，不影响现有条目）。
+
+---
+
 ## [0.3.0] — 2026-04-25
 
 ### 新增

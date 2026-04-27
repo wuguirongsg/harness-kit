@@ -63,9 +63,13 @@ echo "$HARNESS_VERSION" > "$TARGET_DIR/.harness/VERSION"
 success "写入版本标记：$HARNESS_VERSION"
 
 # 复制 Hook 配置
-mkdir -p "$TARGET_DIR/.claude" "$TARGET_DIR/.cursor"
+mkdir -p "$TARGET_DIR/.claude" "$TARGET_DIR/.cursor" "$TARGET_DIR/.cursor/rules"
 cp -n "$SCRIPT_DIR/.claude/settings.json"  "$TARGET_DIR/.claude/settings.json"  2>/dev/null && success ".claude/settings.json" || warn ".claude/settings.json 已存在，跳过"
 cp -n "$SCRIPT_DIR/.cursor/hooks.json"     "$TARGET_DIR/.cursor/hooks.json"     2>/dev/null && success ".cursor/hooks.json" || warn ".cursor/hooks.json 已存在，跳过"
+cp -n "$SCRIPT_DIR/.cursor/rules/karpathy-guidelines.mdc" \
+      "$TARGET_DIR/.cursor/rules/karpathy-guidelines.mdc" 2>/dev/null \
+    && success ".cursor/rules/karpathy-guidelines.mdc" \
+    || warn ".cursor/rules/karpathy-guidelines.mdc 已存在，跳过"
 
 # 生成 CLAUDE.md 和 .cursorrules（与 AGENTS.md 同内容）
 cp -n "$TARGET_DIR/AGENTS.md" "$TARGET_DIR/CLAUDE.md"    2>/dev/null && success "CLAUDE.md" || warn "CLAUDE.md 已存在，跳过"

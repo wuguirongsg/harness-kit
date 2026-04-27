@@ -79,6 +79,7 @@ info "备份当前协议文件到 $BACKUP_DIR ..."
 [ -d "$HARNESS_DIR/hooks" ]            && cp -r "$HARNESS_DIR/hooks"          "$BACKUP_DIR/"
 [ -f ".claude/settings.json" ]         && cp ".claude/settings.json"          "$BACKUP_DIR/claude-settings.json"
 [ -f ".cursor/hooks.json" ]            && cp ".cursor/hooks.json"             "$BACKUP_DIR/cursor-hooks.json"
+[ -d ".cursor/rules" ]                 && cp -r ".cursor/rules"               "$BACKUP_DIR/cursor-rules"
 [ -f ".codex/hooks.json" ]             && cp ".codex/hooks.json"              "$BACKUP_DIR/codex-hooks.json"
 success "备份完成"
 
@@ -113,11 +114,13 @@ chmod +x "$HARNESS_DIR/hooks/"*.sh
 success "hooks/ 脚本"
 
 # Tool 配置（Claude / Cursor / Codex）
-mkdir -p .claude .cursor .codex
+mkdir -p .claude .cursor .cursor/rules .codex
 cp "$SCRIPT_DIR/.claude/settings.json"  ".claude/settings.json"
 success ".claude/settings.json"
 cp "$SCRIPT_DIR/.cursor/hooks.json"     ".cursor/hooks.json"
 success ".cursor/hooks.json"
+cp "$SCRIPT_DIR/.cursor/rules/karpathy-guidelines.mdc" ".cursor/rules/karpathy-guidelines.mdc"
+success ".cursor/rules/karpathy-guidelines.mdc"
 
 if [ -f "$SCRIPT_DIR/.codex/hooks.json" ]; then
     cp "$SCRIPT_DIR/.codex/hooks.json"  ".codex/hooks.json"
@@ -146,21 +149,10 @@ else
     warn ".harness/product/ 已存在，跳过（数据文件受保护）"
 fi
 
-# git commit-msg hook（重新写入最新版本）
+# git commit-msg hook（从 .harness/hooks/commit-msg 写入最新版本）
 if [ -d ".git" ]; then
-    cat > .git/hooks/commit-msg << 'HOOK'
-#!/bin/sh
-MSG=$(cat "$1")
-if ! echo "$MSG" | grep -qE "^(feat|fix|docs|refactor|test|chore|style|perf|session):"; then
-  echo ""
-  echo "⚠️  [harness] commit message 格式不符合规范"
-  echo "    格式：<type>: <描述>"
-  echo "    type：feat/fix/docs/refactor/test/chore/style/perf/session"
-  echo ""
-  exit 1
-fi
-HOOK
-    chmod +x .git/hooks/commit-msg
+    cp "$HARNESS_DIR/hooks/commit-msg" ".git/hooks/commit-msg"
+    chmod +x ".git/hooks/commit-msg"
     success "git commit-msg hook"
 fi
 
@@ -179,7 +171,7 @@ if [ -d ".git" ]; then
             "$HARNESS_DIR/SESSION_END.md" \
             "$HARNESS_DIR/hooks/" \
             "$HARNESS_DIR/VERSION" \
-            ".claude/" ".cursor/" \
+            ".claude/" ".cursor/" ".cursor/rules/" \
             2>/dev/null || true
         [ -d "$HARNESS_DIR/product" ] && git add "$HARNESS_DIR/product/" 2>/dev/null || true
         [ -d ".codex" ]  && git add ".codex/"  2>/dev/null || true
@@ -205,11 +197,27 @@ echo ""
 echo "备份位置：$BACKUP_DIR"
 echo ""
 
+# 版本专项提示：用 awk 做语义版本比较，避免 bash [[ ]] 不支持 >= 的问题
+version_lt() { [ "$(printf '%s\n' "$1" "$2" | sort -V | head -1)" = "$1" ] && [ "$1" != "$2" ]; }
+version_ge() { ! version_lt "$1" "$2"; }
+
 # 0.3.0 专项提示
-if [[ "$CURRENT_VERSION" < "0.3.0" && "$TARGET_VERSION" >= "0.3.0" ]]; then
+if version_lt "$CURRENT_VERSION" "0.3.0" && version_ge "$TARGET_VERSION" "0.3.0"; then
     echo "📌 0.3.0 新增需求管理层，建议："
     echo "   1. 打开 .harness/product/vision.md，填写项目愿景"
     echo "   2. 把积压的需求整理到 .harness/product/backlog.md"
     echo "   3. 下次 Session 时 Agent 会自动读取这两个文件"
+    echo ""
+fi
+
+# 0.4.0 专项提示
+if version_lt "$CURRENT_VERSION" "0.4.0" && version_ge "$TARGET_VERSION" "0.4.0"; then
+    echo "📌 0.4.0 新增 Karpathy 编码行为准则，建议："
+    echo "   1. Cursor 用户：已自动写入 .cursor/rules/karpathy-guidelines.mdc"
+    echo "      （alwaysApply: true，无需额外操作）"
+    echo "   2. 可选：在 features.json 的功能条目里补充 acceptance 字段"
+    echo "      格式：\"acceptance\": \"验收标准：用一句话描述如何判断此功能已完成\""
+    echo "   3. SESSION_START / SESSION_END 已更新编码准则和验收自检，"
+    echo "      下次 Session 自动生效"
     echo ""
 fi
