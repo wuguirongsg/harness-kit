@@ -12,6 +12,12 @@
 
 setlocal enabledelayedexpansion
 
+:: ── 前置依赖检查 ─────────────────────────────────────────────────
+where python3 >nul 2>&1 || (
+    echo [ERROR] 需要 Python3，请先安装 python3（hooks 脚本依赖）
+    exit /b 1
+)
+
 :: ── 确定脚本目录 ─────────────────────────────────────────────────
 set "SCRIPT_DIR=%~dp0"
 if "!SCRIPT_DIR:~-1!"=="\" set "SCRIPT_DIR=!SCRIPT_DIR:~0,-1!"
@@ -57,6 +63,15 @@ call :copy_file "!SCRIPT_DIR!\.harness\SESSION_START.md"   "!TARGET_DIR!\.harnes
 call :copy_file "!SCRIPT_DIR!\.harness\SESSION_END.md"     "!TARGET_DIR!\.harness\SESSION_END.md"
 call :copy_dir  "!SCRIPT_DIR!\.harness\hooks"              "!TARGET_DIR!\.harness\hooks"
 call :copy_file "!SCRIPT_DIR!\.harness\registry\_index.md" "!TARGET_DIR!\.harness\registry\_index.md"
+
+:: ── product 目录（需求管理层）─────────────────────────────────────
+if not exist "!TARGET_DIR!\.harness\product" (
+    md "!TARGET_DIR!\.harness\product"
+    copy /Y "!SCRIPT_DIR!\.harness\product\vision.md"  "!TARGET_DIR!\.harness\product\vision.md" >nul
+    copy /Y "!SCRIPT_DIR!\.harness\product\backlog.md" "!TARGET_DIR!\.harness\product\backlog.md" >nul
+    copy /Y "!SCRIPT_DIR!\.harness\product\changes.md" "!TARGET_DIR!\.harness\product\changes.md" >nul
+    echo [OK] .harness\product\ 需求管理目录
+)
 
 :: ── Hook 配置 ────────────────────────────────────────────────────
 if not exist "!TARGET_DIR!\.claude" md "!TARGET_DIR!\.claude"

@@ -51,8 +51,13 @@ echo ""
 
 # 提取目标版本的 changelog
 if [ -f "$SCRIPT_DIR/CHANGELOG.md" ]; then
-    awk "/^## \[$TARGET_VERSION\]/,/^## \[/" "$SCRIPT_DIR/CHANGELOG.md" \
-      | grep -v "^## \[" | head -20
+    CHANGELOG_SECTION=$(awk "/^## \[$TARGET_VERSION\]/,/^## \[/" "$SCRIPT_DIR/CHANGELOG.md" \
+      | grep -v "^## \[" | head -20)
+    if [ -n "$CHANGELOG_SECTION" ]; then
+        echo "$CHANGELOG_SECTION"
+    else
+        echo "  未找到版本 $TARGET_VERSION 的 CHANGELOG 条目，请查看 CHANGELOG.md"
+    fi
 else
     echo "  请查看 CHANGELOG.md 了解详细变更"
 fi
@@ -121,10 +126,10 @@ if [ -f "$SCRIPT_DIR/.codex/hooks.json" ]; then
 fi
 
 # OpenCode plugin
-if [ -f "$SCRIPT_DIR/.opencode/plugin/harness.ts" ]; then
+if [ -f "$SCRIPT_DIR/.opencode/plugin/harness-opencode-plugin.ts" ]; then
     mkdir -p .opencode/plugin
-    cp "$SCRIPT_DIR/.opencode/plugin/harness.ts" ".opencode/plugin/harness.ts"
-    success ".opencode/plugin/harness.ts"
+    cp "$SCRIPT_DIR/.opencode/plugin/harness-opencode-plugin.ts" ".opencode/plugin/harness-opencode-plugin.ts"
+    success ".opencode/plugin/harness-opencode-plugin.ts"
 fi
 
 # ── 新版本新增的目录和文件（只创建，不覆盖）────────────────────

@@ -12,6 +12,8 @@ GREEN='\033[0;32m'; YELLOW='\033[1;33m'; NC='\033[0m'
 success() { echo -e "${GREEN}✓${NC} $1"; }
 warn()    { echo -e "${YELLOW}⚠${NC} $1"; }
 
+command -v python3 >/dev/null || { echo "错误：需要 Python3，请先安装 python3（hooks 脚本依赖）"; exit 1; }
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
 
 # 确定目标目录
@@ -56,7 +58,7 @@ if [ ! -d "$TARGET_DIR/.harness/product" ]; then
 fi
 
 # 写入版本标记
-HARNESS_VERSION=$(cat "$SCRIPT_DIR/.harness/VERSION" 2>/dev/null || echo "0.3.0")
+HARNESS_VERSION=$(cat "$SCRIPT_DIR/.harness/VERSION" 2>/dev/null) || { warn "VERSION 文件缺失，使用 'unknown'"; HARNESS_VERSION="unknown"; }
 echo "$HARNESS_VERSION" > "$TARGET_DIR/.harness/VERSION"
 success "写入版本标记：$HARNESS_VERSION"
 
@@ -75,18 +77,7 @@ success "hook 脚本权限设置完成"
 
 # 安装 git commit-msg hook
 if [ -d "$TARGET_DIR/.git" ]; then
-    cat > "$TARGET_DIR/.git/hooks/commit-msg" << 'HOOK'
-#!/bin/sh
-MSG=$(cat "$1")
-if ! echo "$MSG" | grep -qE "^(feat|fix|docs|refactor|test|chore|style|perf|session):"; then
-  echo ""
-  echo "⚠️  [harness] commit message 格式不符合规范"
-  echo "    格式：<type>: <描述>"
-  echo "    type 可选：feat / fix / docs / refactor / test / chore / style / perf / session"
-  echo ""
-  exit 1
-fi
-HOOK
+    cp "$TARGET_DIR/.harness/hooks/commit-msg" "$TARGET_DIR/.git/hooks/commit-msg"
     chmod +x "$TARGET_DIR/.git/hooks/commit-msg"
     success "git commit-msg hook 安装完成"
 fi
