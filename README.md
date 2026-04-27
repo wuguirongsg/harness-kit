@@ -55,17 +55,19 @@ cd /path/to/your-project
 bash /path/to/harness-kit/install.sh
 ```
 
-**Windows（PowerShell）**
+**Windows（命令提示符 / cmd）**
 
-```powershell
-powershell -ExecutionPolicy Bypass -File C:\path\to\harness-kit\install.ps1 C:\path\to\your-project
+前置依赖：[Git for Windows](https://git-scm.com/download/win)（提供 bash，hooks 脚本运行需要）、Python3
+
+```bat
+C:\path\to\harness-kit\install.bat C:\path\to\your-project
 ```
 
 也可以先 `cd` 到项目目录再不带参数运行：
 
-```powershell
+```bat
 cd C:\path\to\your-project
-powershell -ExecutionPolicy Bypass -File C:\path\to\harness-kit\install.ps1
+C:\path\to\harness-kit\install.bat
 ```
 
 `install.sh` 会自动完成：

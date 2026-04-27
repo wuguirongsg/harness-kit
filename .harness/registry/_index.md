@@ -15,6 +15,8 @@
 
 <!-- 新条目追加到这里（上方） -->
 
+[2026-04-27 12:00] FIX install.sh 修复（zsh兼容/目标路径参数/session隔离），新增 install.ps1，Windows支持评估结论：只做install.bat不做.cmd hooks → sessions/2026-04-27-1200.md
+
 [2026-04-23 13:49] FIX 修复 install.sh 中 Codex/OpenCode 源文件名错误（致命 bug），更新 README 目录结构和初始化说明 → sessions/2026-04-23-1349.md
 
 [初始化日期] DECISION 项目 harness 初始化，建立 Session 协议框架 → decisions/init.md
