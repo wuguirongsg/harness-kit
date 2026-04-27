@@ -9,12 +9,51 @@ HARNESS_DIR=".harness"
 # 如果 .harness 目录不存在，静默退出（项目还没初始化）
 [ -d "$HARNESS_DIR" ] || exit 0
 
+# 只在 Claude Code 环境中输出（opencode/Cursor 等工具有独立机制）
+[ "${CLAUDE_CODE_HOOKS:-}" = "1" ] || exit 0
+
 # ── 注入内容开始 ──────────────────────────────────────────────
 cat << 'HEADER'
 ╔══════════════════════════════════════════════════════╗
 ║          HARNESS SESSION START — 自动加载            ║
 ╚══════════════════════════════════════════════════════╝
 HEADER
+
+# ── 检测 product 目录是否待初始化（从旧版本升级的项目）──
+if [ -f "$HARNESS_DIR/product/vision.md" ] && \
+   grep -q 'HARNESS_NEEDS_INIT' "$HARNESS_DIR/product/vision.md" 2>/dev/null; then
+
+cat << 'INIT_NOTICE'
+
+## ⚠️ 紧急优先任务：Product 文件待初始化
+
+这个项目是从旧版 harness-kit 升级的，.harness/product/ 目录刚刚创建，内容为空白模板。
+
+**在执行正常 SESSION_START 流程之前，你必须先完成以下初始化：**
+
+1. 读取以下文件了解项目信息：
+   - README.md（如有）
+   - CLAUDE.md 或 AGENTS.md
+   - `git log --oneline -20`（近期提交历史）
+   - 项目根目录下的主要源文件结构
+
+2. 根据以上信息，填写以下三个文件（替换所有占位符）：
+   - .harness/product/vision.md  → 产品定位、成功标准、用户画像
+   - .harness/product/backlog.md → 已知待做事项、历史积压需求
+   - .harness/product/changes.md → 近期方向调整（若有）
+
+3. 每个文件填写完成后，删除文件顶部的 `<!-- HARNESS_NEEDS_INIT -->` 行
+
+4. git commit：`chore: 初始化 product 需求管理目录`
+
+5. 完成后，继续执行正常 SESSION_START 流程
+
+**注意：如果项目信息不足以判断某个字段，写"（暂无，待补充）"，不要留模板占位符。**
+
+---
+INIT_NOTICE
+
+fi
 
 echo ""
 echo "## 你必须立即做的第一件事"

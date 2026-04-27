@@ -150,7 +150,12 @@ if [ ! -d "$HARNESS_DIR/product" ]; then
     cp "$SCRIPT_DIR/$HARNESS_DIR/product/vision.md"  "$HARNESS_DIR/product/vision.md"
     cp "$SCRIPT_DIR/$HARNESS_DIR/product/backlog.md" "$HARNESS_DIR/product/backlog.md"
     cp "$SCRIPT_DIR/$HARNESS_DIR/product/changes.md" "$HARNESS_DIR/product/changes.md"
-    success ".harness/product/（已修复）"
+    # 标记为待初始化：下次 session-start 时 Claude 会自动根据项目信息填写
+    printf '<!-- HARNESS_NEEDS_INIT -->\n\n' > /tmp/_harness_vision_tmp
+    cat "$HARNESS_DIR/product/vision.md" >> /tmp/_harness_vision_tmp
+    mv /tmp/_harness_vision_tmp "$HARNESS_DIR/product/vision.md"
+    success ".harness/product/（已创建，下次对话将自动初始化内容）"
+    PRODUCT_NEEDS_INIT=1
 fi
 
 _create_if_missing \
@@ -209,3 +214,9 @@ echo "  🔄 已更新：协议文件（SESSION_START/END、hooks、tool configs
 echo "  🔒 未修改：product/、state/、registry/、AGENTS.md"
 echo "  📦 备份于：$BACKUP_DIR"
 echo ""
+if [ "${PRODUCT_NEEDS_INIT:-0}" = "1" ]; then
+    echo -e "${YELLOW}  ⚠ 下一步：product/ 目录是首次创建，内容为空白模板${NC}"
+    echo "     下次打开 Claude Code 时，AI 会自动根据项目信息填写"
+    echo "     vision.md / backlog.md / changes.md，无需手动操作。"
+    echo ""
+fi
