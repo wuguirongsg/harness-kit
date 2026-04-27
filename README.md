@@ -40,11 +40,32 @@ git clone https://github.com/yourname/harness-kit.git
 # 或者直接下载 zip 解压
 ```
 
-### 第二步：在你的项目里运行 install.sh
+### 第二步：在你的项目里运行安装脚本
+
+**macOS / Linux**
 
 ```bash
-cd /path/to/your-project      # 先进入你自己的项目根目录
+bash /path/to/harness-kit/install.sh /path/to/your-project
+```
+
+也可以先 `cd` 到项目目录再不带参数运行：
+
+```bash
+cd /path/to/your-project
 bash /path/to/harness-kit/install.sh
+```
+
+**Windows（PowerShell）**
+
+```powershell
+powershell -ExecutionPolicy Bypass -File C:\path\to\harness-kit\install.ps1 C:\path\to\your-project
+```
+
+也可以先 `cd` 到项目目录再不带参数运行：
+
+```powershell
+cd C:\path\to\your-project
+powershell -ExecutionPolicy Bypass -File C:\path\to\harness-kit\install.ps1
 ```
 
 `install.sh` 会自动完成：
@@ -54,7 +75,7 @@ bash /path/to/harness-kit/install.sh
 - 生成 `CLAUDE.md` 和 `.cursorrules`（内容与 `AGENTS.md` 相同）
 - 写入 `.claude/settings.json` Hook 配置（SessionStart / Stop / PreToolUse）
 - 检测到 Codex 时写入 `.codex/hooks.json` 和 `.codex/config.toml`
-- 检测到 OpenCode 时写入 `.opencode/plugin/harness.ts`
+- 检测到 OpenCode 时写入 `.opencode/plugin/harness-opencode-plugin.ts`
 
 ### 第三步：让 AI 初始化你的项目（只做一次）
 
@@ -113,7 +134,7 @@ your-project/
   .claude/settings.json         ← Claude Code Hook 配置
   .cursor/hooks.json            ← Cursor Hook 配置
   .codex/hooks.json             ← Codex Hook 配置
-  .opencode/plugin/harness.ts   ← OpenCode Plugin
+  .opencode/plugin/harness-opencode-plugin.ts   ← OpenCode Plugin
   .harness/
     SESSION_START.md            ← Hook 注入的检查清单
     SESSION_END.md              ← Hook 强制执行的总结清单
@@ -142,6 +163,48 @@ Agent 读取 `features.json`（全部 `passes: true`）和 `current-sprint.md`�
 
 ---
 
+## 需求管理
+
+日常使用中，随时可以告诉 Agent：
+
+```
+把这个加到 backlog：我希望支持 PDF 导入
+```
+
+Agent 立即追加到 `.harness/product/backlog.md`，下次 Sprint 规划时自动纳入评估。
+
+需求变更或方向调整时：
+
+```
+之前计划的 XX 功能不做了，原因是 YY
+```
+
+Agent 在 `.harness/product/changes.md` 记录变更，同时更新 `features.json` 对应条目，保留历史不删除。
+
+---
+
+## 升级 harness-kit
+
+harness-kit 自身持续迭代。已安装旧版本的项目，运行以下命令升级：
+
+```bash
+# 先拉取最新版本
+git pull  # 或重新下载 zip
+
+# 在你的项目里运行升级脚本
+cd your-project
+bash /path/to/harness-kit/upgrade.sh
+```
+
+升级策略：
+- 🔄 **自动替换**：SESSION_START/END、hooks 脚本、tool 配置文件
+- 🔒 **永不覆盖**：`.harness/product/`、`.harness/state/`、`.harness/registry/`、`AGENTS.md`
+- 📦 **自动备份**：升级前把当前协议文件备份到 `.harness/backup/v当前版本/`
+
+查看版本变更历史：见 `CHANGELOG.md`。
+
+---
+
 ## 为什么 AGENTS.md 要保持极简
 
 ETH Zurich 2026 年的研究（arXiv:2602.11988）发现：
@@ -159,7 +222,7 @@ ETH Zurich 2026 年的研究（arXiv:2602.11988）发现：
 |---------|-------------|
 | Claude Code | ✓ 原生 Hook（`.claude/settings.json`），全自动 |
 | Cursor | ✓ 原生 Hook（`.cursor/hooks.json`），全自动 |
-| OpenCode | ✓ Plugin 系统（`.opencode/plugin/harness.ts`），全自动 |
+| OpenCode | ✓ Plugin 系统（`.opencode/plugin/harness-opencode-plugin.ts`），全自动 |
 | Codex CLI | ✓ 原生 Hook（`.codex/hooks.json`），全自动（需开启 `features.hooks=true`）|
 | Windsurf / Aider | — 依赖 AGENTS.md 指令，无机械强制 |
 

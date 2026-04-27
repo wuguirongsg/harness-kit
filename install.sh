@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 # install.sh
-# 把 harness-kit-v2 的文件复制到当前项目，并设置权限
+# 把 harness-kit-v2 的文件复制到目标项目，并设置权限
+#
+# 用法：
+#   bash install.sh                        # 安装到当前目录
+#   bash install.sh /path/to/your-project  # 安装到指定目录
 
 set -e
 
@@ -8,34 +12,70 @@ GREEN='\033[0;32m'; YELLOW='\033[1;33m'; NC='\033[0m'
 success() { echo -e "${GREEN}✓${NC} $1"; }
 warn()    { echo -e "${YELLOW}⚠${NC} $1"; }
 
-# 检查是否在项目根目录
-if [ ! -d ".git" ] && [ ! -f "package.json" ] && [ ! -f "Cargo.toml" ] && [ ! -f "go.mod" ]; then
-    warn "当前目录似乎不是项目根目录，确认要在这里安装吗？[y/N]"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
+
+# 确定目标目录
+if [ -n "$1" ]; then
+    TARGET_DIR="$(cd "$1" && pwd)"
+else
+    TARGET_DIR="$(pwd)"
+fi
+
+# 检查目标目录是否像项目根目录
+if [ ! -d "$TARGET_DIR/.git" ] && [ ! -f "$TARGET_DIR/package.json" ] && \
+   [ ! -f "$TARGET_DIR/Cargo.toml" ] && [ ! -f "$TARGET_DIR/go.mod" ]; then
+    warn "目标目录 $TARGET_DIR 似乎不是项目根目录，确认要在这里安装吗？[y/N]"
     read -r confirm
     [[ "$confirm" =~ ^[Yy] ]] || exit 1
 fi
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+echo "安装目标：$TARGET_DIR"
+echo ""
 
-# 复制文件
-cp -n "$SCRIPT_DIR/HARNESS_SETUP.md"    ./HARNESS_SETUP.md    2>/dev/null && success "HARNESS_SETUP.md" || warn "HARNESS_SETUP.md 已存在，跳过"
-cp -n "$SCRIPT_DIR/AGENTS.md"           ./AGENTS.md           2>/dev/null && success "AGENTS.md" || warn "AGENTS.md 已存在，跳过"
-cp -rn "$SCRIPT_DIR/.harness"           ./.harness            2>/dev/null && success ".harness/" || warn ".harness/ 已存在，跳过"
-mkdir -p .claude .cursor
-cp -n "$SCRIPT_DIR/.claude/settings.json"  ./.claude/settings.json  2>/dev/null && success ".claude/settings.json" || warn ".claude/settings.json 已存在，跳过"
-cp -n "$SCRIPT_DIR/.cursor/hooks.json"     ./.cursor/hooks.json     2>/dev/null && success ".cursor/hooks.json" || warn ".cursor/hooks.json 已存在，跳过"
+# 复制协议文件
+cp -n "$SCRIPT_DIR/HARNESS_SETUP.md"    "$TARGET_DIR/HARNESS_SETUP.md"    2>/dev/null && success "HARNESS_SETUP.md" || warn "HARNESS_SETUP.md 已存在，跳过"
+cp -n "$SCRIPT_DIR/AGENTS.md"           "$TARGET_DIR/AGENTS.md"           2>/dev/null && success "AGENTS.md" || warn "AGENTS.md 已存在，跳过"
+
+# 复制 .harness 模板，排除本项目自身的 session 记录
+mkdir -p "$TARGET_DIR/.harness"
+cp -rn "$SCRIPT_DIR/.harness/SESSION_START.md" "$TARGET_DIR/.harness/SESSION_START.md" 2>/dev/null && success ".harness/SESSION_START.md" || warn ".harness/SESSION_START.md 已存在，跳过"
+cp -rn "$SCRIPT_DIR/.harness/SESSION_END.md"   "$TARGET_DIR/.harness/SESSION_END.md"   2>/dev/null && success ".harness/SESSION_END.md" || warn ".harness/SESSION_END.md 已存在，跳过"
+cp -rn "$SCRIPT_DIR/.harness/hooks"            "$TARGET_DIR/.harness/hooks"            2>/dev/null && success ".harness/hooks/" || warn ".harness/hooks/ 已存在，跳过"
+# 初始化 registry 和 state 目录（不复制本项目的历史记录）
+mkdir -p "$TARGET_DIR/.harness/registry/sessions" "$TARGET_DIR/.harness/registry/decisions"
+mkdir -p "$TARGET_DIR/.harness/state"
+cp -n "$SCRIPT_DIR/.harness/registry/_index.md" "$TARGET_DIR/.harness/registry/_index.md" 2>/dev/null && success ".harness/registry/_index.md" || warn ".harness/registry/_index.md 已存在，跳过"
+
+# 创建 product 目录（需求管理层）
+if [ ! -d "$TARGET_DIR/.harness/product" ]; then
+    mkdir -p "$TARGET_DIR/.harness/product"
+    cp "$SCRIPT_DIR/.harness/product/vision.md"  "$TARGET_DIR/.harness/product/vision.md"
+    cp "$SCRIPT_DIR/.harness/product/backlog.md" "$TARGET_DIR/.harness/product/backlog.md"
+    cp "$SCRIPT_DIR/.harness/product/changes.md" "$TARGET_DIR/.harness/product/changes.md"
+    success ".harness/product/ 需求管理目录"
+fi
+
+# 写入版本标记
+HARNESS_VERSION=$(cat "$SCRIPT_DIR/.harness/VERSION" 2>/dev/null || echo "0.3.0")
+echo "$HARNESS_VERSION" > "$TARGET_DIR/.harness/VERSION"
+success "写入版本标记：$HARNESS_VERSION"
+
+# 复制 Hook 配置
+mkdir -p "$TARGET_DIR/.claude" "$TARGET_DIR/.cursor"
+cp -n "$SCRIPT_DIR/.claude/settings.json"  "$TARGET_DIR/.claude/settings.json"  2>/dev/null && success ".claude/settings.json" || warn ".claude/settings.json 已存在，跳过"
+cp -n "$SCRIPT_DIR/.cursor/hooks.json"     "$TARGET_DIR/.cursor/hooks.json"     2>/dev/null && success ".cursor/hooks.json" || warn ".cursor/hooks.json 已存在，跳过"
 
 # 生成 CLAUDE.md 和 .cursorrules（与 AGENTS.md 同内容）
-cp -n ./AGENTS.md ./CLAUDE.md    2>/dev/null && success "CLAUDE.md" || warn "CLAUDE.md 已存在，跳过"
-cp -n ./AGENTS.md ./.cursorrules 2>/dev/null && success ".cursorrules" || warn ".cursorrules 已存在，跳过"
+cp -n "$TARGET_DIR/AGENTS.md" "$TARGET_DIR/CLAUDE.md"    2>/dev/null && success "CLAUDE.md" || warn "CLAUDE.md 已存在，跳过"
+cp -n "$TARGET_DIR/AGENTS.md" "$TARGET_DIR/.cursorrules" 2>/dev/null && success ".cursorrules" || warn ".cursorrules 已存在，跳过"
 
-# 设置 hook 脚本可执行权限（关键步骤）
-chmod +x .harness/hooks/*.sh
+# 设置 hook 脚本可执行权限
+chmod +x "$TARGET_DIR/.harness/hooks/"*.sh
 success "hook 脚本权限设置完成"
 
-# 安装 git commit-msg hook（检查 commit message 格式）
-if [ -d ".git" ]; then
-    cat > .git/hooks/commit-msg << 'HOOK'
+# 安装 git commit-msg hook
+if [ -d "$TARGET_DIR/.git" ]; then
+    cat > "$TARGET_DIR/.git/hooks/commit-msg" << 'HOOK'
 #!/bin/sh
 MSG=$(cat "$1")
 if ! echo "$MSG" | grep -qE "^(feat|fix|docs|refactor|test|chore|style|perf|session):"; then
@@ -47,25 +87,26 @@ if ! echo "$MSG" | grep -qE "^(feat|fix|docs|refactor|test|chore|style|perf|sess
   exit 1
 fi
 HOOK
-    chmod +x .git/hooks/commit-msg
+    chmod +x "$TARGET_DIR/.git/hooks/commit-msg"
     success "git commit-msg hook 安装完成"
 fi
 
 # 安装 Codex hooks（如果已安装 codex）
-if command -v codex &>/dev/null || [ -f ".codex/config.toml" ]; then
-    mkdir -p .codex
-    cp -n "$SCRIPT_DIR/.codex/codex-hooks.json"   .codex/hooks.json   2>/dev/null \
+if command -v codex &>/dev/null || [ -f "$TARGET_DIR/.codex/config.toml" ]; then
+    mkdir -p "$TARGET_DIR/.codex"
+    cp -n "$SCRIPT_DIR/.codex/codex-hooks.json"  "$TARGET_DIR/.codex/hooks.json"  2>/dev/null \
         && success "Codex hooks.json 安装完成" \
         || warn ".codex/hooks.json 已存在，跳过"
-    cp -n "$SCRIPT_DIR/.codex/codex-config.toml"  .codex/config.toml  2>/dev/null \
+    cp -n "$SCRIPT_DIR/.codex/codex-config.toml" "$TARGET_DIR/.codex/config.toml" 2>/dev/null \
         && success "Codex config.toml 安装完成" \
         || warn ".codex/config.toml 已存在，跳过"
 fi
 
 # 安装 OpenCode plugin（如果已安装 opencode）
-if command -v opencode &>/dev/null || [ -f ".opencode/opencode.json" ]; then
-    mkdir -p .opencode/plugin
-    cp -n "$SCRIPT_DIR/.opencode/plugin/harness-opencode-plugin.ts" .opencode/plugin/harness-opencode-plugin.ts 2>/dev/null \
+if command -v opencode &>/dev/null || [ -f "$TARGET_DIR/.opencode/opencode.json" ]; then
+    mkdir -p "$TARGET_DIR/.opencode/plugin"
+    cp -n "$SCRIPT_DIR/.opencode/plugin/harness-opencode-plugin.ts" \
+          "$TARGET_DIR/.opencode/plugin/harness-opencode-plugin.ts" 2>/dev/null \
         && success "OpenCode plugin 安装完成（.opencode/plugin/harness-opencode-plugin.ts）" \
         || warn ".opencode/plugin/harness-opencode-plugin.ts 已存在，跳过"
 fi
