@@ -22,7 +22,7 @@ error()   { echo -e "${RED}[upgrade]${NC} ✗ $1"; exit 1; }
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 HARNESS_DIR=".harness"
 VERSION_FILE="$HARNESS_DIR/VERSION"
-TARGET_VERSION=$(cat "$SCRIPT_DIR/$HARNESS_DIR/VERSION" 2>/dev/null || echo "0.3.0")
+TARGET_VERSION=$(cat "$SCRIPT_DIR/$HARNESS_DIR/VERSION" 2>/dev/null) || error "harness-kit 源包缺少 VERSION 文件，请检查安装包完整性"
 
 # ── 检查是否在项目目录 ─────────────────────────────────────────
 [ -d "$HARNESS_DIR" ] || error "未找到 .harness/ 目录，请在已安装 harness-kit 的项目根目录下运行"
