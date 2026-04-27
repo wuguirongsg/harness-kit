@@ -51,35 +51,46 @@ echo 安装目标：!TARGET_DIR!
 echo.
 
 :: ── 协议文件 ─────────────────────────────────────────────────────
-call :copy_file "!SCRIPT_DIR!\HARNESS_SETUP.md"  "!TARGET_DIR!\HARNESS_SETUP.md"
-call :copy_file "!SCRIPT_DIR!\AGENTS.md"          "!TARGET_DIR!\AGENTS.md"
+call :copy_file "!SCRIPT_DIR!\template\HARNESS_SETUP.md"  "!TARGET_DIR!\HARNESS_SETUP.md"
+call :copy_file "!SCRIPT_DIR!\template\AGENTS.md"          "!TARGET_DIR!\AGENTS.md"
 
-:: ── .harness 模板（排除本项目自身的 session 记录）────────────────
+:: ── .harness 模板（从 template/ 分发，不携带本项目运行时状态）────
 if not exist "!TARGET_DIR!\.harness\registry\sessions"  md "!TARGET_DIR!\.harness\registry\sessions"
 if not exist "!TARGET_DIR!\.harness\registry\decisions" md "!TARGET_DIR!\.harness\registry\decisions"
 if not exist "!TARGET_DIR!\.harness\state"              md "!TARGET_DIR!\.harness\state"
 
-call :copy_file "!SCRIPT_DIR!\.harness\SESSION_START.md"   "!TARGET_DIR!\.harness\SESSION_START.md"
-call :copy_file "!SCRIPT_DIR!\.harness\SESSION_END.md"     "!TARGET_DIR!\.harness\SESSION_END.md"
-call :copy_dir  "!SCRIPT_DIR!\.harness\hooks"              "!TARGET_DIR!\.harness\hooks"
-call :copy_file "!SCRIPT_DIR!\.harness\registry\_index.md" "!TARGET_DIR!\.harness\registry\_index.md"
+call :copy_file "!SCRIPT_DIR!\template\.harness\SESSION_START.md"   "!TARGET_DIR!\.harness\SESSION_START.md"
+call :copy_file "!SCRIPT_DIR!\template\.harness\SESSION_END.md"     "!TARGET_DIR!\.harness\SESSION_END.md"
+call :copy_dir  "!SCRIPT_DIR!\template\.harness\hooks"              "!TARGET_DIR!\.harness\hooks"
+call :copy_file "!SCRIPT_DIR!\template\.harness\registry\_index.md" "!TARGET_DIR!\.harness\registry\_index.md"
 
 :: ── product 目录（需求管理层）─────────────────────────────────────
 if not exist "!TARGET_DIR!\.harness\product" (
     md "!TARGET_DIR!\.harness\product"
-    copy /Y "!SCRIPT_DIR!\.harness\product\vision.md"  "!TARGET_DIR!\.harness\product\vision.md" >nul
-    copy /Y "!SCRIPT_DIR!\.harness\product\backlog.md" "!TARGET_DIR!\.harness\product\backlog.md" >nul
-    copy /Y "!SCRIPT_DIR!\.harness\product\changes.md" "!TARGET_DIR!\.harness\product\changes.md" >nul
+    copy /Y "!SCRIPT_DIR!\template\.harness\product\vision.md"  "!TARGET_DIR!\.harness\product\vision.md" >nul
+    copy /Y "!SCRIPT_DIR!\template\.harness\product\backlog.md" "!TARGET_DIR!\.harness\product\backlog.md" >nul
+    copy /Y "!SCRIPT_DIR!\template\.harness\product\changes.md" "!TARGET_DIR!\.harness\product\changes.md" >nul
     echo [OK] .harness\product\ 需求管理目录
 )
+
+:: ── 版本标记 ────────────────────────────────────────────────────
+set "VERSION_SRC=!SCRIPT_DIR!\template\.harness\VERSION"
+if exist "!VERSION_SRC!" (
+    for /f "usebackq delims=" %%v in ("!VERSION_SRC!") do set "HARNESS_VERSION=%%v"
+) else (
+    echo [WARN] VERSION 文件缺失，使用 'unknown'
+    set "HARNESS_VERSION=unknown"
+)
+echo !HARNESS_VERSION! > "!TARGET_DIR!\.harness\VERSION"
+echo [OK] 写入版本标记：!HARNESS_VERSION!
 
 :: ── Hook 配置 ────────────────────────────────────────────────────
 if not exist "!TARGET_DIR!\.claude" md "!TARGET_DIR!\.claude"
 if not exist "!TARGET_DIR!\.cursor" md "!TARGET_DIR!\.cursor"
 if not exist "!TARGET_DIR!\.cursor\rules" md "!TARGET_DIR!\.cursor\rules"
-call :copy_file "!SCRIPT_DIR!\.claude\settings.json" "!TARGET_DIR!\.claude\settings.json"
-call :copy_file "!SCRIPT_DIR!\.cursor\hooks.json"    "!TARGET_DIR!\.cursor\hooks.json"
-call :copy_file "!SCRIPT_DIR!\.cursor\rules\karpathy-guidelines.mdc" "!TARGET_DIR!\.cursor\rules\karpathy-guidelines.mdc"
+call :copy_file "!SCRIPT_DIR!\template\.claude\settings.json" "!TARGET_DIR!\.claude\settings.json"
+call :copy_file "!SCRIPT_DIR!\template\.cursor\hooks.json"    "!TARGET_DIR!\.cursor\hooks.json"
+call :copy_file "!SCRIPT_DIR!\template\.cursor\rules\karpathy-guidelines.mdc" "!TARGET_DIR!\.cursor\rules\karpathy-guidelines.mdc"
 
 :: ── CLAUDE.md 和 .cursorrules ────────────────────────────────────
 call :copy_file "!TARGET_DIR!\AGENTS.md" "!TARGET_DIR!\CLAUDE.md"
@@ -92,7 +103,7 @@ echo [OK] Windows 无需设置脚本执行权限
 if exist "!TARGET_DIR!\.git" (
     if not exist "!TARGET_DIR!\.git\hooks" md "!TARGET_DIR!\.git\hooks"
     if not exist "!TARGET_DIR!\.git\hooks\commit-msg" (
-        python3 -c "s=open(r'!SCRIPT_DIR!\.harness\hooks\commit-msg','rb').read().replace(b'\r\n',b'\n');open(r'!TARGET_DIR!\.git\hooks\commit-msg','wb').write(s)"
+        python3 -c "s=open(r'!SCRIPT_DIR!\template\.harness\hooks\commit-msg','rb').read().replace(b'\r\n',b'\n');open(r'!TARGET_DIR!\.git\hooks\commit-msg','wb').write(s)"
         echo [OK] git commit-msg hook 安装完成
     ) else (
         echo [WARN] git commit-msg hook 已存在，跳过
@@ -105,8 +116,8 @@ where codex >nul 2>&1 && set CODEX_OK=1
 if exist "!TARGET_DIR!\.codex\config.toml" set CODEX_OK=1
 if "!CODEX_OK!"=="1" (
     if not exist "!TARGET_DIR!\.codex" md "!TARGET_DIR!\.codex"
-    call :copy_file "!SCRIPT_DIR!\.codex\codex-hooks.json"  "!TARGET_DIR!\.codex\hooks.json"
-    call :copy_file "!SCRIPT_DIR!\.codex\codex-config.toml" "!TARGET_DIR!\.codex\config.toml"
+    call :copy_file "!SCRIPT_DIR!\template\.codex\codex-hooks.json"  "!TARGET_DIR!\.codex\hooks.json"
+    call :copy_file "!SCRIPT_DIR!\template\.codex\codex-config.toml" "!TARGET_DIR!\.codex\config.toml"
 )
 
 :: ── OpenCode plugin ──────────────────────────────────────────────
@@ -115,7 +126,7 @@ where opencode >nul 2>&1 && set OC_OK=1
 if exist "!TARGET_DIR!\.opencode\opencode.json" set OC_OK=1
 if "!OC_OK!"=="1" (
     if not exist "!TARGET_DIR!\.opencode\plugin" md "!TARGET_DIR!\.opencode\plugin"
-    call :copy_file "!SCRIPT_DIR!\.opencode\plugin\harness-opencode-plugin.ts" "!TARGET_DIR!\.opencode\plugin\harness-opencode-plugin.ts"
+    call :copy_file "!SCRIPT_DIR!\template\.opencode\plugin\harness-opencode-plugin.ts" "!TARGET_DIR!\.opencode\plugin\harness-opencode-plugin.ts"
 )
 
 echo.
