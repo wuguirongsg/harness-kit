@@ -49,7 +49,7 @@ echo ""
 
 # ── 显示最新版本的 CHANGELOG ──────────────────────────────────────
 if [ -f "$SCRIPT_DIR/CHANGELOG.md" ]; then
-    info "最新版本内容（$TARGET_VERSION）："
+    info "最新版本内容 [$TARGET_VERSION]:"
     echo ""
     awk -v ver="$TARGET_VERSION" '
         $0 ~ ("^## \\[" ver "\\]") { in_section=1; next }
