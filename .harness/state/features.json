@@ -23,7 +23,7 @@
       "description": "完成 HARNESS_SETUP 初始化",
       "acceptance": "vision.md / features.json / AGENTS.md / constraints.md / current-sprint.md 全部填写完毕，无模板占位符",
       "depends_on": [],
-      "passes": false
+      "passes": true
     },
     {
       "id": "feat-004",
