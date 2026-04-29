@@ -13,6 +13,9 @@
 
 <!-- 新需求默认追加到这里 -->
 
+- [2026-04-29] [用户] harness SESSION_START 只有"功能开发"和"Sprint切换"两种模式，不支持完整软件开发生命周期（DISCOVER/DESIGN/PLAN/BUILD/VERIFY/RELEASE/RETRO），需要引入 lifecycle phase 概念重新设计 SESSION_START 行为
+- [2026-04-29] [用户] Stop hook 的 stdout 注入机制可能未生效——hook exit 2 后 SESSION_END 清单未能自动注入到 Claude 上下文，用户只看到"No stderr output"通知，需排查并修复
+
 ## 已规划
 
 > 已进入某个 Sprint 的需求，从"待评估"移过来，注明 Sprint。

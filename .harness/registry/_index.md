@@ -15,6 +15,8 @@
 
 <!-- 新条目追加到这里（上方） -->
 
+[2026-04-29 11:00] DECISION harness 生命周期支持不足诊断 + lifecycle phase 改造方向设计，两个确认问题待用户回答 → sessions/2026-04-29-1100.md
+
 [2026-04-27 16:00] DONE 修复 install.bat template源bug + .gitignore + HARNESS_SETUP初始化完成（vision/features/AGENTS/constraints全部填写），第一阶段 5 个功能定义完成 → sessions/2026-04-27-1600.md
 
 [2026-04-27 14:00] DECISION 引入 template/ 目录，install.sh/upgrade.sh 唯一源改为 template/，消除 .harness/ 运行时状态污染模板内容的问题 → decisions/template-dir.md
