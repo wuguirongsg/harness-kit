@@ -133,35 +133,60 @@ harness-kit 的约束不依赖 AI "记得去做"，通过 Hook 系统机械执�
 your-project/
   AGENTS.md                     ← 极简，≤60 行，只写 AI 发现不了的信息
   CLAUDE.md / .cursorrules      ← 同上，各工具自动读取
+  docs/                         ← 项目文档（install 时自动创建骨架）
+    requirements/               ← DISCOVER 阶段需求文档
+    design/                     ← DESIGN 阶段产品/架构设计文档
+    releases/                   ← RELEASE 阶段发布说明
   .claude/settings.json         ← Claude Code Hook 配置
   .cursor/hooks.json            ← Cursor Hook 配置
   .codex/hooks.json             ← Codex Hook 配置
   .opencode/plugin/harness-opencode-plugin.ts   ← OpenCode Plugin
   .harness/
-    SESSION_START.md            ← Hook 注入的检查清单
+    SESSION_START.md            ← Hook 注入的检查清单（支持 7 阶段）
     SESSION_END.md              ← Hook 强制执行的总结清单
     hooks/                      ← Hook 脚本
     registry/
       _index.md                 ← 决策索引（Agent 只读最近 5 条）
-      decisions/                ← 架构决策记录
+      decisions/                ← 架构决策记录（ADR）
       sessions/                 ← Session 摘要（Agent 自动写入）
     state/
       features.json             ← 功能完成合约（防止自以为完成）
       constraints.md            ← 已知约束（持续增量追加）
-      current-sprint.md         ← 当前阶段目标
+      current-sprint.md         ← 当前阶段目标 + 默认 Session 阶段
 ```
 
 ---
 
-## 迭代规划
+## 开发生命周期
 
-每个 Sprint 结束后，在新 Session 里说：
+harness-kit 支持完整的软件开发生命周期，不只是"写代码"：
+
+| 阶段 | 触发方式 | 典型产出 |
+|------|---------|---------|
+| DISCOVER | `:discover` 或关键词"需求/用户说" | `docs/requirements/` |
+| DESIGN | `:design` 或关键词"架构/方案" | `docs/design/`、`registry/decisions/` |
+| PLAN | `:plan` 或关键词"规划/Sprint" | `features.json` 新条目 |
+| BUILD | 默认，或 `:build` | 代码提交 |
+| VERIFY | `:verify` 或关键词"测试/验证" | 测试结果、Bug 记录 |
+| RELEASE | `:release` 或关键词"发布/上线" | `docs/releases/vX.Y.Z.md` |
+| RETRO | `:retro` 或关键词"复盘/总结" | `registry/decisions/retro-N.md` |
+
+Session 开始时 Agent 会自动根据你说的内容判断当前阶段，也可以用 `:指令` 明确指定：
 
 ```
-第一阶段已经全部完成，请结合 docs/ 里的 PRD 规划第二阶段
+:build 继续做 feat-002        ← 明确进入开发模式
+:fix 发现登录页有个对齐 bug   ← 快速修复，不走规划流程
+:discover 聊一下支付模块需求  ← 进入需求探索模式
+:status                        ← 查看当前状态摘要
 ```
 
-Agent 读取 `features.json`（全部 `passes: true`）和 `current-sprint.md`，自动理解阶段切换，向你确认新功能范围后写入状态文件。之后每次 Session 自动加载新阶段状态，无需手动操作。
+**Sprint 切换**：每个 Sprint 结束后，在新 Session 里说：
+
+```
+第一阶段已经全部完成，请结合 backlog 规划第二阶段
+```
+
+Agent 读取 `features.json`（全部 `passes: true`）和 backlog，向你确认新功能范围后写入状态文件。
 
 ---
 

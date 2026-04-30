@@ -5,6 +5,7 @@
 **阶段**：第一阶段
 **目标**：（由初始化填入）
 **完成标准**：features.json 中本阶段所有条目 passes = true
+**默认 Session 阶段**：BUILD
 
 ---
 

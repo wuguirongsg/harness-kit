@@ -24,7 +24,15 @@
 
 | 文件 | 说明 |
 |------|------|
-| `.harness/state/current-sprint.md` | 当前阶段目标 |
+| `.harness/state/current-sprint.md` | 当前阶段目标 + `默认 Session 阶段` 字段 |
 | `.harness/state/features.json` | 功能完成合约，passes 只能 false→true |
 | `.harness/state/constraints.md` | 已知约束，发现新的立即追加 |
 | `.harness/registry/_index.md` | 决策索引，每次 Session 读最近 5 条 |
+| `docs/requirements/` | DISCOVER 阶段需求文档 |
+| `docs/design/` | DESIGN 阶段产品/架构设计文档 |
+| `docs/releases/` | RELEASE 阶段发布说明 |
+
+## 生命周期阶段指令
+
+用 `:指令` 明确当前 Session 的工作阶段：
+`:discover` · `:design` · `:plan` · `:build` · `:verify` · `:release` · `:retro` · `:fix`（快速修复）

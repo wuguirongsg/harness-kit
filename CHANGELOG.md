@@ -5,6 +5,37 @@
 
 ---
 
+## [0.5.0] — 2026-04-30
+
+### 新增
+- **7 阶段生命周期支持**：SESSION_START.md 完整重写，支持 DISCOVER / DESIGN / PLAN / BUILD / VERIFY / RELEASE / RETRO 七个开发阶段
+- **两步法 Session 开始**：第一屏只输出简短状态摘要等待用户说明意图，用户回复后再显示阶段对应的上下文，不再默认强推功能开发流程
+- **`:指令` 语法**：用户可通过 `:build`、`:discover`、`:design`、`:plan`、`:verify`、`:release`、`:retro`、`:fix`、`:status`、`:help` 明确指定阶段；也支持关键词自动判断
+- **`:fix` 快速修复子模式**：跳过规划直接描述问题，SESSION_END 极简（只更新 `_index.md` 一行，不创建摘要文件）
+- `current-sprint.md` 新增 `默认 Session 阶段` 字段，记录项目当前所在阶段
+- `docs/` 骨架目录（`requirements/` / `design/` / `releases/`）由 install.sh/bat 初始化时自动创建
+- SESSION_END.md 明确：探索性会话（无产出）可跳过摘要文件，只更新 `_index.md` 即满足 guard 放行条件
+
+### 变更
+- `SESSION_END.md` 各阶段允许的 `_index.md` 条目类型不同（DISCOVER / DECISION / DONE / BLOCKED / FIX / RELEASE / RETRO）
+- `SESSION_END.md` 非 BUILD/VERIFY 阶段跳过 `features.json` 更新步骤
+- `_index.md` 类型说明改为单行 `>` blockquote 格式，修复 `session-start.sh` 过滤器误抓类型说明的 Bug
+- `commit-msg` hook 新增 `discover`、`design`、`verify`、`release`、`retro` 提交类型
+- Stop hook（`session-end-guard.sh`）加 `additionalContext: true`，尝试修复 SESSION_END 清单未注入 Claude 上下文的问题
+- `session-end-guard.sh` FALLBACK 清单说明更新：非 BUILD/VERIFY 阶段跳过 features.json 步骤
+
+### 升级方式
+```bash
+bash /path/to/harness-kit/upgrade.sh
+```
+
+升级后需手动在 `current-sprint.md` 添加一行：
+```
+**默认 Session 阶段**：BUILD
+```
+
+---
+
 ## [0.4.0] — 2026-04-27
 
 ### 新增

@@ -133,6 +133,15 @@ info "检查并修复缺失的数据目录..."
 mkdir -p "$HARNESS_DIR/registry/sessions" "$HARNESS_DIR/registry/decisions"
 mkdir -p "$HARNESS_DIR/state"
 
+# docs/ 骨架（v0.5.0 新增，设计/需求/发布文档目录）
+for doc_dir in requirements design releases; do
+    if [ ! -d "docs/$doc_dir" ]; then
+        mkdir -p "docs/$doc_dir"
+        touch "docs/$doc_dir/.gitkeep"
+        success "docs/$doc_dir/（已创建）"
+    fi
+done
+
 _create_if_missing() {
     local src="$1" dst="$2" label="$3"
     if [ ! -e "$dst" ]; then
