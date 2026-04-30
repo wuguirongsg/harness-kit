@@ -18,7 +18,7 @@
 
 - install.bat 和 install.sh 是两条独立代码路径，修改一个必须同步另一个
 - Hook 脚本大量使用 `2>/dev/null` 静默吞错，调试困难
-- session-end-guard.sh 用日期检测 SESSION_END 是否完成，同一天多次会话只拦截第一次
+- session-end-guard.sh 用日期检测 SESSION_END 是否完成，同一天多次会话只拦截第一次。7阶段模式下更容易触发：早上的 :fix 或 DISCOVER session 完成后，下午的 BUILD session 会被直接放行，SESSION_END 被跳过。长期方案：session-start 时写入时间戳标记文件，guard 改为检测该标记之后是否有新的 session 记录
 - session-start.sh 无 token 预算控制，大型项目的 SESSION_START.md 可能占满上下文
 
 ## Session 中新发现的约束
