@@ -63,6 +63,11 @@
 
 ## 第三步：写 Session 摘要
 
+**判断是否需要创建摘要文件：**
+
+- **有具体产出**（代码、决策、需求文档、发现的 Bug）→ 创建摘要文件
+- **纯探索性讨论**（DISCOVER/RETRO/DESIGN 阶段，没有任何具体结论或产出）→ **跳过此步**，直接做第四步（只更新 _index.md 即可，guard 会放行）
+
 创建文件：`.harness/registry/sessions/YYYY-MM-DD-HHmm.md`
 
 ```markdown
@@ -90,6 +95,12 @@
 ```
 [YYYY-MM-DD HH:mm] [类型] 摘要一句话 → sessions/YYYY-MM-DD-HHmm.md
 ```
+
+纯探索性讨论（无摘要文件）格式：
+```
+[YYYY-MM-DD HH:mm] DISCOVER 探索了 XX 方向，暂无结论
+```
+（无需 → 指向文件，guard 检查到今天有 _index 条目即可放行）
 
 按本次 Session 阶段选择类型：
 
