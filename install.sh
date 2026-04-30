@@ -65,6 +65,15 @@ if [ ! -d "$TARGET_DIR/.harness/product" ]; then
     success ".harness/product/ 需求管理目录"
 fi
 
+# 创建 docs/ 骨架（设计/需求/发布文档目录）
+for doc_dir in requirements design releases; do
+    if [ ! -d "$TARGET_DIR/docs/$doc_dir" ]; then
+        mkdir -p "$TARGET_DIR/docs/$doc_dir"
+        touch "$TARGET_DIR/docs/$doc_dir/.gitkeep"
+    fi
+done
+success "docs/ 骨架创建完成（requirements/ design/ releases/）"
+
 # 写入版本标记
 HARNESS_VERSION=$(cat "$TMPL/.harness/VERSION" 2>/dev/null) || { warn "VERSION 文件缺失，使用 'unknown'"; HARNESS_VERSION="unknown"; }
 echo "$HARNESS_VERSION" > "$TARGET_DIR/.harness/VERSION"

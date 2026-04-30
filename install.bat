@@ -73,6 +73,15 @@ if not exist "!TARGET_DIR!\.harness\product" (
     echo [OK] .harness\product\ 需求管理目录
 )
 
+:: ── docs/ 骨架（设计/需求/发布文档目录）──────────────────────────
+for %%d in (requirements design releases) do (
+    if not exist "!TARGET_DIR!\docs\%%d" (
+        md "!TARGET_DIR!\docs\%%d"
+        type nul > "!TARGET_DIR!\docs\%%d\.gitkeep"
+    )
+)
+echo [OK] docs/ 骨架创建完成（requirements/ design/ releases/）
+
 :: ── 版本标记 ────────────────────────────────────────────────────
 set "VERSION_SRC=!SCRIPT_DIR!\template\.harness\VERSION"
 if exist "!VERSION_SRC!" (
