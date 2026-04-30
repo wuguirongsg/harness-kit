@@ -56,6 +56,7 @@ DISCOVER → DESIGN → PLAN → BUILD → VERIFY → RELEASE → RETRO
 | `:design` | 明确开始设计 Session |
 | `:plan` | 明确开始规划 Session |
 | `:build` | 明确开始开发 Session（当前默认行为）|
+| `:fix` | 快速修复子模式——跳过规划，直接描述问题，做完只需一行记录 |
 | `:verify` | 明确开始验证/测试 Session |
 | `:release` | 明确开始发布 Session |
 | `:retro` | 明确开始复盘 Session |
@@ -208,6 +209,10 @@ backlog 待评估：[条目列表]
 
 ### 5.4 BUILD（开发）— 维持当前行为
 
+BUILD 分两种子模式，由用户指令或关键词自动区分。
+
+#### 正常 BUILD（`:build`）
+
 **Session 开始报告**：
 ```
 ## Session 开始 — BUILD 阶段
@@ -224,6 +229,36 @@ backlog 待评估：[条目列表]
 **工作中行为**：同现有协议（Karpathy 准则、每完成一个 feat 立即 commit）
 
 **Session 结束**：同现有协议（更新 features.json、写 session 摘要、git commit）
+
+---
+
+#### 快速修复（`:fix`）
+
+适用场景：临时性小需求、发现的小 Bug、计划外的紧急改动——不需要预先规划，不新增 feat 条目。
+
+**Session 开始**：
+```
+## Session 开始 — 快速修复
+
+跳过规划。描述要修什么？
+```
+
+**工作中行为**：
+- 直接开始，无需对照 features.json
+- 遵守 Karpathy 准则（说清楚改哪里、为什么，再动手）
+- 改完立即 commit（`fix: 描述`）
+
+**Session 结束（极简）**：
+- **不**写 session 摘要文件
+- **不**更新 features.json
+- 在 `_index.md` 最前面追加一行 `FIX` 条目即可：
+  `[日期 时间] FIX 一句话描述 → commit abc1234`
+- git commit `.harness/`（只含 _index.md 变更）
+
+**自动触发条件**（无需用户明确输入 `:fix`）：
+用户消息包含以下关键词时，Agent 自动识别为快速修复模式并告知用户：
+- "顺手改一下"、"小改"、"临时"、"快速修一下"、"发现个问题"
+- "这里有个 bug"、"顺便"、"简单改"
 
 ---
 
