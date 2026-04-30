@@ -15,7 +15,9 @@
 
 <!-- 新条目追加到这里（上方） -->
 
-[2026-04-29 11:00] DECISION harness 生命周期支持不足诊断 + lifecycle phase 改造方向设计，两个确认问题待用户回答 → sessions/2026-04-29-1100.md
+[2026-04-30 10:00] DECISION lifecycle phase 完整设计文档完成，7阶段模型 + :指令语法 + 自动判断算法，待实现 → decisions/lifecycle-phase-design.md
+
+[2026-04-29 11:00] DECISION harness 生命周期支持不足诊断 + lifecycle phase 改造方向设计 → sessions/2026-04-29-1100.md
 
 [2026-04-27 16:00] DONE 修复 install.bat template源bug + .gitignore + HARNESS_SETUP初始化完成（vision/features/AGENTS/constraints全部填写），第一阶段 5 个功能定义完成 → sessions/2026-04-27-1600.md
 
