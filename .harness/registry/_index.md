@@ -16,7 +16,9 @@
 
 <!-- 新条目追加到这里（上方） -->
 
-[2026-04-30 10:00] DECISION lifecycle phase 完整设计文档完成，7阶段模型 + :指令语法 + 自动判断算法，待实现 → decisions/lifecycle-phase-design.md
+[2026-04-30 10:00] DONE lifecycle phase 改造完成（feat-006~009），SESSION_START两步法+7阶段+:fix，Stop hook修复 → sessions/2026-04-30-1000.md
+
+[2026-04-30 09:00] DECISION lifecycle phase 完整设计文档完成，7阶段模型 + :指令语法 + 自动判断算法 → decisions/lifecycle-phase-design.md
 
 [2026-04-29 11:00] DECISION harness 生命周期支持不足诊断 + lifecycle phase 改造方向设计 → sessions/2026-04-29-1100.md
 
