@@ -38,6 +38,34 @@
       "acceptance": "CI 脚本或 pre-commit hook 检测 .harness/ 与 template/.harness/ 的协议文件（SESSION_START.md / SESSION_END.md / hooks/）是否一致，不一致时阻止提交",
       "depends_on": ["feat-003"],
       "passes": false
+    },
+    {
+      "id": "feat-006",
+      "description": "lifecycle phase 状态字段：current-sprint.md 加 默认Session阶段 字段；_index.md 类型注释扩展",
+      "acceptance": "current-sprint.md 包含 '默认 Session 阶段' 字段且值为合法阶段名；_index.md 类型说明包含 DISCOVER/VERIFY/RELEASE/RETRO",
+      "depends_on": [],
+      "passes": false
+    },
+    {
+      "id": "feat-007",
+      "description": "SESSION_START.md 重写：两步法 + 7 种阶段报告 + :指令语法 + 关键词自动判断",
+      "acceptance": "SESSION_START.md 包含两步法说明、7 个阶段的 Session 开始报告模板、:指令表、关键词映射表；template/ 副本同步",
+      "depends_on": ["feat-006"],
+      "passes": false
+    },
+    {
+      "id": "feat-008",
+      "description": "SESSION_END.md 更新：各阶段允许的 _index 类型、非 BUILD 阶段跳过 features.json 步骤、:fix 极简结束流程",
+      "acceptance": "SESSION_END.md 包含阶段-类型对应表和 :fix 极简路径；template/ 副本同步",
+      "depends_on": ["feat-007"],
+      "passes": false
+    },
+    {
+      "id": "feat-009",
+      "description": "session-end-guard.sh 修复 + install.sh 建 docs/ 骨架",
+      "acceptance": "Stop hook exit 2 后 SESSION_END 清单能注入 Claude 上下文；install.sh 初始化时创建 docs/requirements/ docs/design/ docs/releases/ 并放 .gitkeep",
+      "depends_on": ["feat-008"],
+      "passes": false
     }
   ]
 }

@@ -8,8 +8,9 @@
 格式：`[日期 时间] [类型] 一句话摘要 → 详情文件`
 
 类型说明：
-- `DONE` 完成功能 · `WIP` 进行中 · `BLOCKED` 阻塞
-- `DECISION` 架构决策 · `CONSTRAINT` 新发现约束 · `FIX` 修复问题
+- `DONE` 完成功能 · `WIP` 进行中 · `BLOCKED` 阻塞 · `FIX` 计划外修复
+- `DECISION` 架构/设计决策 · `CONSTRAINT` 新发现约束
+- `DISCOVER` 需求探索 · `VERIFY` 验证测试 · `RELEASE` 版本发布 · `RETRO` 阶段复盘
 
 ---
 
