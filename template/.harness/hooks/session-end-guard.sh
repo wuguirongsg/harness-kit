@@ -35,6 +35,14 @@ if has_session_today || has_index_today; then
     exit 0
 fi
 
+# ── 工作树干净（无任何文件改动）= 纯问答会话，放行 ─────────────
+# 判断依据：有实质工作必然产生未提交变更；纯问答不改文件，工作树保持干净
+if git rev-parse --git-dir >/dev/null 2>&1; then
+    if [ -z "$(git status --porcelain 2>/dev/null)" ]; then
+        exit 0
+    fi
+fi
+
 # ── 还没做 SESSION_END，拦截并注入清单 ─────────────────────────
 cat << 'BLOCK'
 ╔══════════════════════════════════════════════════════════╗
