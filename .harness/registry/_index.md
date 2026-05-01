@@ -13,6 +13,8 @@
 
 <!-- 新条目追加到这里（上方） -->
 
+[2026-04-30 11:00] FIX session-end-guard 增加纯问答快速放行（工作树干净则 exit 0） → commit c83d073
+
 [2026-04-30 10:00] DONE lifecycle phase 改造完成（feat-006~009），SESSION_START两步法+7阶段+:fix，Stop hook修复 → sessions/2026-04-30-1000.md
 
 [2026-04-30 09:00] DECISION lifecycle phase 完整设计文档完成，7阶段模型 + :指令语法 + 自动判断算法 → decisions/lifecycle-phase-design.md
