@@ -43,6 +43,19 @@
           }
         ]
       }
+    ],
+
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .harness/hooks/session-end.sh",
+            "additionalContext": true,
+            "timeout": 10
+          }
+        ]
+      }
     ]
 
   }

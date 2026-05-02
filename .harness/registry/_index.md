@@ -13,6 +13,8 @@
 
 <!-- 新条目追加到这里（上方） -->
 
+[2026-05-02 12:00] DONE Stop hook 恢复，用 harness dirty 检测触发 SESSION_END，多轮对话场景验证通过 → sessions/2026-05-02-1200.md
+
 [2026-05-01 10:00] FIX 移除 Claude Code/Codex/Cursor Stop hook，session-start.sh 加遗漏检测，SESSION_END 改为下次补救机制 → commit 4be126c
 
 [2026-04-30 11:00] FIX session-end-guard 增加纯问答快速放行（工作树干净则 exit 0） → commit c83d073
