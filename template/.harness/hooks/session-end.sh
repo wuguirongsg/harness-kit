@@ -21,9 +21,11 @@ harness_dirty=$(git status --porcelain -- "$HARNESS_DIR" 2>/dev/null)
 # 注入 SESSION_END 协议并阻断停止
 if [ -f "$HARNESS_DIR/SESSION_END.md" ]; then
     if [ -f "$FLAG" ]; then
+        echo "## Session_End已提示，结束"
         rm "$FLAG"
         exit 0
     fi
+    echo "## Session 停止提示"
     touch "$FLAG"
     cat "$HARNESS_DIR/SESSION_END.md"
     exit 2

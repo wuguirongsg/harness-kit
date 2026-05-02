@@ -13,6 +13,8 @@
 
 <!-- 新条目追加到这里（上方） -->
 
+[2026-05-02 14:00] FIX SESSION_END.md 精简（224→43行），session-end.sh 加停止提示文案 → commit 待提交
+
 [2026-05-02 13:00] FIX Stop hook flag 改为 $PWD hash 隔离，防多项目相互污染 → commit 4a4a4af
 
 [2026-05-02 12:00] DONE Stop hook 恢复，用 harness dirty 检测触发 SESSION_END，多轮对话场景验证通过 → sessions/2026-05-02-1200.md
