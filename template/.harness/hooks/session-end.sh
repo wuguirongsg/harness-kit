@@ -13,11 +13,6 @@ FLAG="/tmp/harness-session-end-${PROJECT_HASH}"
 # 只在 Claude Code 环境中触发
 [ "${CLAUDE_CODE_HOOKS:-}" = "1" ] || exit 0
 
-# 检查 .harness/ 是否有未提交内容
-git rev-parse --git-dir >/dev/null 2>&1 || exit 0
-harness_dirty=$(git status --porcelain -- "$HARNESS_DIR" 2>/dev/null)
-[ -n "$harness_dirty" ] || exit 0
-
 # 注入 SESSION_END 协议并阻断停止
 if [ -f "$HARNESS_DIR/SESSION_END.md" ]; then
     if [ -f "$FLAG" ]; then
