@@ -1,7 +1,8 @@
 # harness 生命周期阶段支持 — 设计文档
 
-**状态**：草稿，待实现
+**状态**：已实现（部分补丁见 2026-05-04 追加）
 **日期**：2026-04-30
+**补丁日期**：2026-05-04
 **背景**：当前 SESSION_START 只有"功能开发"和"Sprint切换"两种模式，
 不符合完整软件开发周期（需求→设计→规划→开发→验证→发布→复盘）。
 
@@ -475,3 +476,35 @@ feat-A 和 feat-D 无强依赖，可以先做 feat-D（排查 Stop hook 问题�
 | 不引入新运行时依赖 | ✅ 全部是 markdown + bash |
 | features.json 只改 passes | ✅ |
 | 支持多 AI 工具 | ✅ SESSION_START.md 是纯 markdown，与工具无关 |
+
+---
+
+## 十二、补丁：状态文件责任矩阵（2026-05-04）
+
+### 背景
+
+原设计实现后，发现三个遗漏：
+1. `changes.md` 没有任何流程触发点，成为空文件
+2. FIX 子模式跳过第零步（backlog 捕获），导致需求永久丢失
+3. `current-sprint.md` 的功能状态栏与 `features.json` 重复，且无强制同步机制
+
+### 修复原则
+
+**每个状态文件必须有明确的"由谁写、什么时候必须写"，不允许"有则填"作为唯一触发。**
+
+### 状态文件责任矩阵
+
+| 状态文件 | 触发阶段 | 规则 |
+|---------|---------|------|
+| `backlog.md` | 所有阶段（含FIX） | 有新想法/反馈则填；DISCOVER/VERIFY/RETRO 结束时强制检查 |
+| `changes.md` | PLAN、RETRO | PLAN 结束时检查有无取消/调整；RETRO 的方向性决定追加 |
+| `features.json` | BUILD/VERIFY（更新passes）、PLAN（新增条目） | 强制 |
+| `current-sprint.md` | PLAN（元数据）、RELEASE（版本号） | 只含 阶段/目标/完成标准/默认Session阶段/当前版本；无功能状态栏 |
+| `_index.md` | 所有阶段 | 强制 |
+
+### 具体改动
+
+- `current-sprint.md`：删除"本阶段功能列表"状态表，新增"当前版本"字段
+- `SESSION_END.md` 第五步：区分 BUILD/VERIFY/PLAN/RETRO 的差异处理，绑定 changes.md 触发
+- `SESSION_END.md` FIX 子模式：加回第零步（backlog 捕获），不再完全跳过
+- `SESSION_START.md` PLAN 报告：明确来源为 features.json，不再提 current-sprint.md 状态栏

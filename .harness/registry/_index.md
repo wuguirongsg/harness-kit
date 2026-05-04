@@ -13,6 +13,8 @@
 
 <!-- 新条目追加到这里（上方） -->
 
+[2026-05-04 11:00] DECISION 状态文件责任矩阵重设计：current-sprint.md 去功能状态栏，changes.md 绑定 PLAN/RETRO，FIX 加回 backlog 捕获 → decisions/lifecycle-phase-design.md（十二节）
+
 [2026-05-02 14:00] FIX SESSION_END.md 精简（224→43行），session-end.sh 加停止提示文案 → commit 待提交
 
 [2026-05-02 13:00] FIX Stop hook flag 改为 $PWD hash 隔离，防多项目相互污染 → commit 4a4a4af
