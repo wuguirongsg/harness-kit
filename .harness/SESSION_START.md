@@ -11,8 +11,8 @@
 读 .harness/product/vision.md       → 确认产品方向，所有决策对照此文件
 读 .harness/product/backlog.md      → 扫"待评估"区，看有无积压需求
 读 .harness/registry/_index.md      → 只看最近 5 条
-读 .harness/state/current-sprint.md → 确认本阶段目标和默认 Session 阶段
-读 .harness/state/features.json     → 找出所有 passes=false 的条目
+读 .harness/state/current-sprint.md → 确认本阶段目标和默认 Session 阶段（不含功能状态）
+读 .harness/state/features.json     → 找出所有 passes=false 的条目（唯一功能状态权威）
 读 .harness/state/constraints.md    → 扫一遍已知约束，避免重蹈覆辙
 ```
 
@@ -129,14 +129,15 @@
 ```
 ## Session 开始 — PLAN 阶段
 
-当前 Sprint：[current-sprint.md 阶段名]
-backlog 待评估：[条目列表，无则写"暂无"]
-未完成功能：[features.json passes=false 列表]
+当前 Sprint：[current-sprint.md 阶段名 + 目标]
+backlog 待评估：[backlog.md "待评估"区条目列表，无则写"暂无"]
+未完成功能（来自 features.json）：[passes=false 的条目列表]
 
 今天要规划哪个阶段/功能集？
 ```
 
-用户确认功能列表后，立即更新 `features.json` 和 `current-sprint.md`（不能推迟到 SESSION_END）。
+用户确认功能列表后，立即更新 `features.json` 和 `current-sprint.md` 元数据字段（不能推迟到 SESSION_END）。
+注意：current-sprint.md 不再维护功能状态栏，features.json 是唯一来源。
 
 ---
 

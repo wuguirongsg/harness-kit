@@ -6,12 +6,7 @@
 **目标**：（由初始化填入）
 **完成标准**：features.json 中本阶段所有条目 passes = true
 **默认 Session 阶段**：BUILD
-
----
-
-## 本阶段功能列表
-
-（由初始化填入，与 features.json 保持同步）
+**当前版本**：（由 RELEASE 阶段更新）
 
 ---
 

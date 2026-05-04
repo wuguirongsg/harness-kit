@@ -22,9 +22,14 @@
 `[YYYY-MM-DD HH:mm] [类型] 摘要 → sessions/文件名`
 类型：DONE / WIP / BLOCKED / FIX / DISCOVER / DECISION
 
-## 第五步：features.json
-仅 BUILD/VERIFY 阶段执行。完成的功能 passes 改为 true（只能 false→true）。
-PLAN 阶段：更新 current-sprint.md，追加新功能条目到 features.json。
+## 第五步：features.json 与 changes.md
+**BUILD/VERIFY 阶段**：完成的功能 passes 改为 true（只能 false→true）。
+**PLAN 阶段**：追加新功能条目到 features.json；更新 current-sprint.md 元数据（阶段/目标/默认阶段）。
+　　并检查：本次有无功能被取消/推迟/降优先级？
+　　→ 有 → 追加到 `product/changes.md`（格式见文件头部注释）
+　　→ 无 → 跳过（不需要在 changes.md 写"无变更"）
+**RETRO 阶段**：讨论产生改进行动项 → 写入 backlog.md；方向性调整 → 追加到 changes.md。
+**其他阶段**：跳过本步骤。
 
 ## 第六步：git commit
 ```bash
@@ -38,6 +43,8 @@ git commit -m "chore: session YYYY-MM-DD HH:mm - 一句话摘要"
 ---
 
 ## FIX 子模式（快速修复）
-跳过第零~三步，只做：
-1. `_index.md` 最前面追加：`[时间] FIX 修复内容 → commit hash前7位`
-2. `git add .harness/ && git commit -m "chore: session ..."`
+1. **第零步（保留）**：对话中提到新想法/反馈 → 一行追加到 `product/backlog.md`；无则跳过
+2. `_index.md` 最前面追加：`[时间] FIX 修复内容 → commit hash前7位`
+3. `git add .harness/ && git commit -m "chore: session ..."`
+
+跳过第一~三步（决策文件/约束/摘要）。
