@@ -13,6 +13,8 @@
 
 <!-- 新条目追加到这里（上方） -->
 
+[2026-05-04 22:59] DONE session-end 三条路径统一（移除 dirty 检查）+ SESSION_END.md 按阶段重写 + OpenCode 去重改为内存标志 → sessions/2026-05-04-2259.md
+
 [2026-05-04 14:00] DECISION 精简状态文件：删除 vision/constraints/changes 三个孤儿文件，内容合并到 backlog.md；SESSION_START 读取从6文件减至4个 → commit 5b59464
 
 [2026-05-04 11:00] DECISION 状态文件责任矩阵重设计：current-sprint.md 去功能状态栏，changes.md 绑定 PLAN/RETRO，FIX 加回 backlog 捕获 → decisions/lifecycle-phase-design.md（十二节）
