@@ -157,13 +157,11 @@ _create_if_missing \
 
 if [ ! -d "$HARNESS_DIR/product" ]; then
     mkdir -p "$HARNESS_DIR/product"
-    cp "$TMPL/$HARNESS_DIR/product/vision.md"  "$HARNESS_DIR/product/vision.md"
     cp "$TMPL/$HARNESS_DIR/product/backlog.md" "$HARNESS_DIR/product/backlog.md"
-    cp "$TMPL/$HARNESS_DIR/product/changes.md" "$HARNESS_DIR/product/changes.md"
     # 标记为待初始化：下次 session-start 时 Claude 会自动根据项目信息填写
-    printf '<!-- HARNESS_NEEDS_INIT -->\n\n' > /tmp/_harness_vision_tmp
-    cat "$HARNESS_DIR/product/vision.md" >> /tmp/_harness_vision_tmp
-    mv /tmp/_harness_vision_tmp "$HARNESS_DIR/product/vision.md"
+    printf '<!-- HARNESS_NEEDS_INIT -->\n\n' > /tmp/_harness_backlog_tmp
+    cat "$HARNESS_DIR/product/backlog.md" >> /tmp/_harness_backlog_tmp
+    mv /tmp/_harness_backlog_tmp "$HARNESS_DIR/product/backlog.md"
     success ".harness/product/（已创建，下次对话将自动初始化内容）"
     PRODUCT_NEEDS_INIT=1
 fi
@@ -177,11 +175,6 @@ _create_if_missing \
     "$TMPL/$HARNESS_DIR/state/current-sprint.md" \
     "$HARNESS_DIR/state/current-sprint.md" \
     ".harness/state/current-sprint.md"
-
-_create_if_missing \
-    "$TMPL/$HARNESS_DIR/state/constraints.md" \
-    "$HARNESS_DIR/state/constraints.md" \
-    ".harness/state/constraints.md"
 
 echo ""
 
@@ -227,6 +220,6 @@ echo ""
 if [ "${PRODUCT_NEEDS_INIT:-0}" = "1" ]; then
     echo -e "${YELLOW}  ⚠ 下一步：product/ 目录是首次创建，内容为空白模板${NC}"
     echo "     下次打开 Claude Code 时，AI 会自动根据项目信息填写"
-    echo "     vision.md / backlog.md / changes.md，无需手动操作。"
+    echo "     backlog.md（含产品方向 + 需求 + 约束），无需手动操作。"
     echo ""
 fi

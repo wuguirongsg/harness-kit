@@ -54,14 +54,11 @@ cp -n "$TMPL/.harness/registry/decisions/init.md"  "$TARGET_DIR/.harness/registr
 mkdir -p "$TARGET_DIR/.harness/state"
 cp -n "$TMPL/.harness/state/features.json"     "$TARGET_DIR/.harness/state/features.json"     2>/dev/null && success ".harness/state/features.json" || warn ".harness/state/features.json 已存在，跳过"
 cp -n "$TMPL/.harness/state/current-sprint.md" "$TARGET_DIR/.harness/state/current-sprint.md" 2>/dev/null && success ".harness/state/current-sprint.md" || warn ".harness/state/current-sprint.md 已存在，跳过"
-cp -n "$TMPL/.harness/state/constraints.md"    "$TARGET_DIR/.harness/state/constraints.md"    2>/dev/null && success ".harness/state/constraints.md" || warn ".harness/state/constraints.md 已存在，跳过"
 
-# 创建 product 目录（需求管理层）
+# 创建 product 目录（需求 + 产品方向 + 约束，统一在 backlog.md）
 if [ ! -d "$TARGET_DIR/.harness/product" ]; then
     mkdir -p "$TARGET_DIR/.harness/product"
-    cp "$TMPL/.harness/product/vision.md"  "$TARGET_DIR/.harness/product/vision.md"
     cp "$TMPL/.harness/product/backlog.md" "$TARGET_DIR/.harness/product/backlog.md"
-    cp "$TMPL/.harness/product/changes.md" "$TARGET_DIR/.harness/product/changes.md"
     success ".harness/product/ 需求管理目录"
 fi
 

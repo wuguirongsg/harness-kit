@@ -64,12 +64,10 @@ call :copy_file "!SCRIPT_DIR!\template\.harness\SESSION_END.md"     "!TARGET_DIR
 call :copy_dir  "!SCRIPT_DIR!\template\.harness\hooks"              "!TARGET_DIR!\.harness\hooks"
 call :copy_file "!SCRIPT_DIR!\template\.harness\registry\_index.md" "!TARGET_DIR!\.harness\registry\_index.md"
 
-:: ── product 目录（需求管理层）─────────────────────────────────────
+:: ── product 目录（需求 + 产品方向 + 约束，统一在 backlog.md）──────
 if not exist "!TARGET_DIR!\.harness\product" (
     md "!TARGET_DIR!\.harness\product"
-    copy /Y "!SCRIPT_DIR!\template\.harness\product\vision.md"  "!TARGET_DIR!\.harness\product\vision.md" >nul
     copy /Y "!SCRIPT_DIR!\template\.harness\product\backlog.md" "!TARGET_DIR!\.harness\product\backlog.md" >nul
-    copy /Y "!SCRIPT_DIR!\template\.harness\product\changes.md" "!TARGET_DIR!\.harness\product\changes.md" >nul
     echo [OK] .harness\product\ 需求管理目录
 )
 

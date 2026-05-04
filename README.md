@@ -151,7 +151,6 @@ your-project/
       sessions/                 ← Session 摘要（Agent 自动写入）
     state/
       features.json             ← 功能完成合约（防止自以为完成）
-      constraints.md            ← 已知约束（持续增量追加）
       current-sprint.md         ← 当前阶段目标 + 默认 Session 阶段
 ```
 
@@ -206,7 +205,7 @@ Agent 立即追加到 `.harness/product/backlog.md`，下次 Sprint 规划时自
 之前计划的 XX 功能不做了，原因是 YY
 ```
 
-Agent 在 `.harness/product/changes.md` 记录变更，同时更新 `features.json` 对应条目，保留历史不删除。
+Agent 在 `backlog.md` 的"已规划/已否决/变更"区记录原因，同时更新 `features.json` 对应条目，保留历史不删除。
 
 ---
 
