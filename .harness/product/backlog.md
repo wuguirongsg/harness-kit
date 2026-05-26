@@ -36,6 +36,7 @@
 > 来源：自己 / 用户反馈 / 竞品观察 / 技术债 / [VERIFY] / [RETRO]
 
 <!-- 新需求追加到这里 -->
+- [2026-05-26] 自提 中英文双语支持（feat-010）：安装时通过 `--lang en/zh` 选择语言包，template/locales/<lang>/ 覆盖对应协议文件。设计文档见 docs/design/i18n-bilingual.md
 
 ---
 

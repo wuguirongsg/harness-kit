@@ -6,6 +6,12 @@
 ::   install.bat                          安装到当前目录
 ::   install.bat C:\path\to\your-project  安装到指定目录
 ::
+:: TODO(feat-010): 中英文双语支持 — 预留 --lang 参数
+::   install.bat --lang en                           英文版，安装到当前目录
+::   install.bat --lang en C:\path\to\project       英文版，安装到指定目录
+::   实现时从 template\locales\<lang>\ 覆盖对应协议文件；默认 zh（无需改动）
+::   详见 docs/design/i18n-bilingual.md
+::
 :: 前置依赖：
 ::   Git for Windows（提供 bash，hooks 需要）
 ::   Python3（hooks 脚本依赖）
