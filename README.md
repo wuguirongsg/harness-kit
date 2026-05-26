@@ -33,31 +33,52 @@ harness-kit 的做法：不靠 Prompt 叮嘱，而是通过 **Hook 机械强制 
 
 ## 快速开始
 
-### 第一步：下载 harness-kit
+### 方式一：npm 全局安装（频繁使用推荐）
+
+> 前置依赖：Node.js 16+（macOS / Linux / Windows 均适用）
 
 ```bash
-git clone https://github.com/yourname/harness-kit.git
+npm install -g harness-kit
+```
+
+安装后可在任意位置直接调用：
+
+```bash
+# 安装到当前目录
+harness-kit
+
+# 或指定目标项目路径
+harness-kit /path/to/your-project
+```
+
+### 方式二：npx（一次性使用，无需全局安装）
+
+```bash
+# 安装到当前目录
+npx harness-kit
+
+# 或指定目标项目路径
+npx harness-kit /path/to/your-project
+```
+
+### 方式三：手动 clone + bash 脚本（零 Node 依赖）
+
+**第一步：下载 harness-kit**
+
+```bash
+git clone https://github.com/wuguirong/harness-kit.git
 # 或者直接下载 zip 解压
 ```
 
-### 第二步：在你的项目里运行安装脚本
+**第二步：在你的项目里运行安装脚本**
 
-**macOS / Linux**
+macOS / Linux：
 
 ```bash
 bash /path/to/harness-kit/install.sh /path/to/your-project
 ```
 
-也可以先 `cd` 到项目目录再不带参数运行：
-
-```bash
-cd /path/to/your-project
-bash /path/to/harness-kit/install.sh
-```
-
-**Windows（命令提示符 / cmd）**
-
-前置依赖：[Git for Windows](https://git-scm.com/download/win)（提供 bash，hooks 脚本运行需要）、Python3
+Windows（需 [Git for Windows](https://git-scm.com/download/win) 和 Python3）：
 
 ```bat
 C:\path\to\harness-kit\install.bat C:\path\to\your-project
@@ -256,4 +277,4 @@ ETH Zurich 2026 年的研究（arXiv:2602.11988）发现：
 
 ## 许可证
 
-MIT
+Apache License 2.0

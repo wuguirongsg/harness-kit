@@ -1,0 +1,42 @@
+{
+  "name": "harness-kit",
+  "version": "0.5.0",
+  "description": "AI Agent 执行环境框架 — 把约束写进环境，而不是 Prompt",
+  "keywords": [
+    "ai",
+    "agent",
+    "claude",
+    "cursor",
+    "codex",
+    "opencode",
+    "llm",
+    "developer-tools",
+    "workflow"
+  ],
+  "homepage": "https://github.com/wuguirong/harness-kit#readme",
+  "bugs": {
+    "url": "https://github.com/wuguirong/harness-kit/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wuguirong/harness-kit.git"
+  },
+  "license": "Apache-2.0",
+  "bin": {
+    "harness-kit": "./bin/harness-kit.js"
+  },
+  "files": [
+    "bin/",
+    "template/",
+    "install.sh",
+    "install.bat",
+    "upgrade.sh",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "NOTICE"
+  ],
+  "engines": {
+    "node": ">=16"
+  }
+}

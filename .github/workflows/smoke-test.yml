@@ -1,0 +1,85 @@
+name: Smoke Test
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  install-sh:
+    name: install.sh (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create temp target project
+        run: |
+          mkdir -p /tmp/test-project
+          cd /tmp/test-project && git init && git commit --allow-empty -m "init"
+
+      - name: Run install.sh
+        run: bash install.sh /tmp/test-project
+
+      - name: Verify key files exist
+        run: |
+          test -f /tmp/test-project/HARNESS_SETUP.md
+          test -f /tmp/test-project/AGENTS.md
+          test -f /tmp/test-project/.harness/SESSION_START.md
+          test -f /tmp/test-project/.harness/SESSION_END.md
+          test -d /tmp/test-project/.harness/hooks
+          test -f /tmp/test-project/.harness/VERSION
+          echo "All files verified"
+
+  install-bat:
+    name: install.bat (windows-latest)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create temp target project
+        run: |
+          New-Item -ItemType Directory -Path "C:\tmp\test-project" -Force
+          cd "C:\tmp\test-project"
+          git init
+          git commit --allow-empty -m "init"
+        shell: pwsh
+
+      - name: Run install.bat
+        run: cmd /c install.bat C:\tmp\test-project
+
+      - name: Verify key files exist
+        run: |
+          Test-Path "C:\tmp\test-project\HARNESS_SETUP.md" -PathType Leaf
+          Test-Path "C:\tmp\test-project\AGENTS.md" -PathType Leaf
+          Test-Path "C:\tmp\test-project\.harness\SESSION_START.md" -PathType Leaf
+          Test-Path "C:\tmp\test-project\.harness\VERSION" -PathType Leaf
+          Write-Host "All files verified"
+        shell: pwsh
+
+  npx-cli:
+    name: npx harness-kit (ubuntu)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Create temp target project
+        run: |
+          mkdir -p /tmp/test-project
+          cd /tmp/test-project && git init && git commit --allow-empty -m "init"
+
+      - name: Run via node bin
+        run: node bin/harness-kit.js /tmp/test-project
+
+      - name: Verify key files exist
+        run: |
+          test -f /tmp/test-project/HARNESS_SETUP.md
+          test -f /tmp/test-project/.harness/VERSION
+          echo "npx path verified"
