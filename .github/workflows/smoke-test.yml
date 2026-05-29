@@ -19,7 +19,10 @@ jobs:
       - name: Create temp target project
         run: |
           mkdir -p /tmp/test-project
-          cd /tmp/test-project && git init && git commit --allow-empty -m "init"
+          git -C /tmp/test-project init
+          git -C /tmp/test-project config user.email "ci@harness-kit.test"
+          git -C /tmp/test-project config user.name "Harness CI"
+          git -C /tmp/test-project commit --allow-empty -m "init"
 
       - name: Run install.sh
         run: bash install.sh /tmp/test-project
@@ -43,9 +46,10 @@ jobs:
       - name: Create temp target project
         run: |
           New-Item -ItemType Directory -Path "C:\tmp\test-project" -Force
-          cd "C:\tmp\test-project"
-          git init
-          git commit --allow-empty -m "init"
+          git -C "C:\tmp\test-project" init
+          git -C "C:\tmp\test-project" config user.email "ci@harness-kit.test"
+          git -C "C:\tmp\test-project" config user.name "Harness CI"
+          git -C "C:\tmp\test-project" commit --allow-empty -m "init"
         shell: pwsh
 
       - name: Run install.bat
@@ -73,7 +77,10 @@ jobs:
       - name: Create temp target project
         run: |
           mkdir -p /tmp/test-project
-          cd /tmp/test-project && git init && git commit --allow-empty -m "init"
+          git -C /tmp/test-project init
+          git -C /tmp/test-project config user.email "ci@harness-kit.test"
+          git -C /tmp/test-project config user.name "Harness CI"
+          git -C /tmp/test-project commit --allow-empty -m "init"
 
       - name: Run via node bin
         run: node bin/harness-kit.js /tmp/test-project

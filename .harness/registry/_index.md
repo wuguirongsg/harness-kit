@@ -44,3 +44,5 @@
 [2026-04-23 13:49] FIX 修复 install.sh 中 Codex/OpenCode 源文件名错误（致命 bug），更新 README 目录结构和初始化说明 → sessions/2026-04-23-1349.md
 
 [初始化日期] DECISION 项目 harness 初始化，建立 Session 协议框架 → decisions/init.md
+
+[2026-05-29 10:20] FIX CI smoke-test 三个 job 因 git identity 未配置导致 commit --allow-empty 失败（Ubuntu exit 128 / Windows exit 1），在 smoke-test.yml 所有 Create temp target project 步骤添加 git config user.email/user.name → commit 待推送
