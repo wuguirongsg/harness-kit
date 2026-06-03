@@ -13,6 +13,8 @@
 
 <!-- 新条目追加到这里（上方） -->
 
+[2026-06-03 17:30] FIX upgrade.bat LF→CRLF + chcp 65001 修复 Windows CMD 执行崩溃；install.bat 同步加 chcp 65001；推送 Gitee+GitHub；npm publish v0.5.1 待完成（需先 npm login）
+
 [2026-06-03 16:30] FIX 添加 .harness/.gitignore 排除 .session-end-flag，同步 template/，升版本 v0.5.1，推送 Gitee+GitHub，npm publish 待完成（需先 npm login）
 
 [2026-06-03 今日] FIX session-end flag 改为项目本地路径（.harness/.session-end-flag），session-start 清残留 flag，SESSION_START 补 Stop Hook 说明 → commit a7e54b7
