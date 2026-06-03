@@ -13,6 +13,8 @@
 
 <!-- 新条目追加到这里（上方） -->
 
+[2026-06-03 23:00] FIX .harness/VERSION 和 template/.harness/VERSION 漏更新（仍是 0.5.0），同步至 0.5.3 并推送；待办：考虑 preversion script 自动同步
+
 [2026-06-03 22:00] FIX 根本原因：git autocrlf 在 commit 时把 CRLF 转回 LF → 加 .gitattributes 强制 *.bat eol=crlf → v0.5.3 tag 推送，GitHub Actions 自动发布 npm
 
 [2026-06-03 21:00] RELEASE v0.5.2 打 tag 推送 GitHub，GitHub Actions 自动发布 npm（含 CRLF 修复 + .gitignore + session-end flag 本地化）
