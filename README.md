@@ -38,7 +38,7 @@ harness-kit 的做法：不靠 Prompt 叮嘱，而是通过 **Hook 机械强制 
 > 前置依赖：Node.js 16+（macOS / Linux / Windows 均适用）
 
 ```bash
-npm install -g harness-kit
+npm install -g @wuguirongsg/harness-kit
 ```
 
 安装后可在任意位置直接调用：
@@ -55,10 +55,10 @@ harness-kit /path/to/your-project
 
 ```bash
 # 安装到当前目录
-npx harness-kit
+npx @wuguirongsg/harness-kit
 
 # 或指定目标项目路径
-npx harness-kit /path/to/your-project
+npx @wuguirongsg/harness-kit /path/to/your-project
 ```
 
 ### 方式三：手动 clone + bash 脚本（零 Node 依赖）
@@ -232,7 +232,20 @@ Agent 在 `backlog.md` 的"已规划/已否决/变更"区记录原因，同时�
 
 ## 升级 harness-kit
 
-harness-kit 自身持续迭代。已安装旧版本的项目，运行以下命令升级：
+harness-kit 自身持续迭代。已安装旧版本的项目，根据当初的安装方式选择对应命令：
+
+### npm 安装的用户（推荐）
+
+```bash
+# 第一步：升级 npm 包
+npm install -g @wuguirongsg/harness-kit
+
+# 第二步：在你的项目里运行升级
+cd your-project
+harness-kit upgrade
+```
+
+### 手动 clone 的用户
 
 ```bash
 # 先拉取最新版本
@@ -240,7 +253,12 @@ git pull  # 或重新下载 zip
 
 # 在你的项目里运行升级脚本
 cd your-project
+
+# macOS / Linux
 bash /path/to/harness-kit/upgrade.sh
+
+# Windows
+C:\path\to\harness-kit\upgrade.bat
 ```
 
 升级策略：

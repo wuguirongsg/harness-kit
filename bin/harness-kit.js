@@ -10,10 +10,13 @@ const args = process.argv.slice(2);
 
 if (args[0] === '--help' || args[0] === '-h') {
   console.log([
-    'Usage: harness-kit [target-dir]',
+    'Usage: harness-kit [command] [target-dir]',
     '',
-    'Install harness-kit into the specified project directory.',
-    'If no directory is given, installs into the current directory.',
+    'Commands:',
+    '  (none)         Install harness-kit into the target directory',
+    '  upgrade        Upgrade protocol files in the target directory',
+    '',
+    'If no directory is given, uses the current directory.',
     '',
     'Options:',
     '  --help, -h     Show this help message',
@@ -28,21 +31,22 @@ if (args[0] === '--version' || args[0] === '-v') {
   process.exit(0);
 }
 
-const targetDir = args[0] || process.cwd();
-
 let result;
-if (os.platform() === 'win32') {
-  result = spawnSync(
-    'cmd',
-    ['/c', path.join(pkgDir, 'install.bat'), targetDir],
-    { stdio: 'inherit' }
-  );
+
+if (args[0] === 'upgrade') {
+  const targetDir = args[1] || process.cwd();
+  if (os.platform() === 'win32') {
+    result = spawnSync('cmd', ['/c', path.join(pkgDir, 'upgrade.bat'), targetDir], { stdio: 'inherit' });
+  } else {
+    result = spawnSync('bash', [path.join(pkgDir, 'upgrade.sh'), targetDir], { stdio: 'inherit' });
+  }
 } else {
-  result = spawnSync(
-    'bash',
-    [path.join(pkgDir, 'install.sh'), targetDir],
-    { stdio: 'inherit' }
-  );
+  const targetDir = args[0] || process.cwd();
+  if (os.platform() === 'win32') {
+    result = spawnSync('cmd', ['/c', path.join(pkgDir, 'install.bat'), targetDir], { stdio: 'inherit' });
+  } else {
+    result = spawnSync('bash', [path.join(pkgDir, 'install.sh'), targetDir], { stdio: 'inherit' });
+  }
 }
 
 process.exit(result.status ?? 0);
