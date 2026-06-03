@@ -1,4 +1,5 @@
 @echo off
+chcp 65001 > nul
 :: upgrade.bat — harness-kit 修复 & 更新脚本（Windows 版）
 ::
 :: 用法：

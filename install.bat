@@ -1,4 +1,5 @@
 @echo off
+chcp 65001 > nul
 :: install.bat
 :: 把 harness-kit-v2 的文件复制到目标项目
 ::
