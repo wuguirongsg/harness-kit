@@ -12,6 +12,9 @@ HARNESS_DIR=".harness"
 # 只在 Claude Code 环境中输出（opencode/Cursor 等工具有独立机制）
 [ "${CLAUDE_CODE_HOOKS:-}" = "1" ] || exit 0
 
+# 每次新 session 启动时清掉上次残留的 stop-flag，确保 session-end 能正常触发
+rm -f "$HARNESS_DIR/.session-end-flag"
+
 # ── 注入内容开始 ──────────────────────────────────────────────
 cat << 'HEADER'
 ╔══════════════════════════════════════════════════════╗

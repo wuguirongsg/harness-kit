@@ -5,6 +5,18 @@
 
 ---
 
+## Stop Hook 信号（最高优先级）
+
+**如果你在对话中收到以 `Stop hook feedback` 开头的消息，立即执行 SESSION_END 协议：**
+
+1. 读取 `.harness/SESSION_END.md`
+2. 按步骤完成收尾（更新 registry、git commit 等）
+3. 告知用户已完成，可再次 `/exit`
+
+无需等待用户进一步指令，直接开始执行。
+
+---
+
 ## 第一步：读取状态（按顺序，不要跳过）
 
 ```

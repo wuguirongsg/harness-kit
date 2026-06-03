@@ -4,14 +4,10 @@
 # exit 0 = 允许停止；exit 2 = 阻断停止并将 stdout 注入为 additionalContext
 
 HARNESS_DIR=".harness"
-PROJECT_HASH=$(printf '%s' "$PWD" | cksum | awk '{print $1}')
-FLAG="/tmp/harness-session-end-${PROJECT_HASH}"
+FLAG="$HARNESS_DIR/.session-end-flag"
 
 # 没有 .harness 目录 → 不是 harness 项目，放行
 [ -d "$HARNESS_DIR" ] || exit 0
-
-# 只在 Claude Code 环境中触发
-[ "${CLAUDE_CODE_HOOKS:-}" = "1" ] || exit 0
 
 # 注入 SESSION_END 协议并阻断停止
 if [ -f "$HARNESS_DIR/SESSION_END.md" ]; then
