@@ -13,6 +13,8 @@
 
 <!-- 新条目追加到这里（上方） -->
 
+[2026-06-03 16:30] FIX 添加 .harness/.gitignore 排除 .session-end-flag，同步 template/，升版本 v0.5.1，推送 Gitee+GitHub，npm publish 待完成（需先 npm login）
+
 [2026-06-03 今日] FIX session-end flag 改为项目本地路径（.harness/.session-end-flag），session-start 清残留 flag，SESSION_START 补 Stop Hook 说明 → commit a7e54b7
 
 [2026-05-04 22:59] DONE session-end 三条路径统一（移除 dirty 检查）+ SESSION_END.md 按阶段重写 + OpenCode 去重改为内存标志 → sessions/2026-05-04-2259.md
