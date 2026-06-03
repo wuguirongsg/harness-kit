@@ -1,6 +1,6 @@
 {
   "name": "@wuguirongsg/harness-kit",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "AI Agent 执行环境框架 — 把约束写进环境，而不是 Prompt",
   "keywords": [
     "ai",
