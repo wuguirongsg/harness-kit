@@ -50,6 +50,7 @@ mkdir -p "$TARGET_DIR/.harness"
 cp -rn "$TMPL/.harness/SESSION_START.md" "$TARGET_DIR/.harness/SESSION_START.md" 2>/dev/null && success ".harness/SESSION_START.md" || warn ".harness/SESSION_START.md 已存在，跳过"
 cp -rn "$TMPL/.harness/SESSION_END.md"   "$TARGET_DIR/.harness/SESSION_END.md"   2>/dev/null && success ".harness/SESSION_END.md" || warn ".harness/SESSION_END.md 已存在，跳过"
 cp -rn "$TMPL/.harness/hooks"            "$TARGET_DIR/.harness/hooks"            2>/dev/null && success ".harness/hooks/" || warn ".harness/hooks/ 已存在，跳过"
+cp -n  "$TMPL/.harness/gitignore"       "$TARGET_DIR/.harness/.gitignore"       2>/dev/null && success ".harness/.gitignore" || warn ".harness/.gitignore 已存在，跳过"
 
 # 初始化 registry（使用干净模板，不携带 harness-kit 自身的历史记录）
 mkdir -p "$TARGET_DIR/.harness/registry/sessions" "$TARGET_DIR/.harness/registry/decisions"

@@ -105,6 +105,7 @@ call :force_copy "!TMPL!\.harness\SESSION_END.md"    "!HARNESS_DIR!\SESSION_END.
 call :force_copy "!TMPL!\HARNESS_SETUP.md"           "!TARGET_DIR!\HARNESS_SETUP.md"   "HARNESS_SETUP.md"
 
 xcopy /E /I /Y /Q "!TMPL!\.harness\hooks" "!HARNESS_DIR!\hooks" >nul && echo [OK] hooks/
+call :force_copy "!TMPL!\.harness\gitignore" "!HARNESS_DIR!\.gitignore" ".harness\.gitignore"
 
 if not exist "!TARGET_DIR!\.claude"       md "!TARGET_DIR!\.claude"
 if not exist "!TARGET_DIR!\.cursor"       md "!TARGET_DIR!\.cursor"

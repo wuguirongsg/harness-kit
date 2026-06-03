@@ -93,6 +93,9 @@ cp -r "$TMPL/$HARNESS_DIR/hooks/." "$HARNESS_DIR/hooks/"
 chmod +x "$HARNESS_DIR/hooks/"*.sh
 success "hooks/"
 
+cp "$TMPL/$HARNESS_DIR/gitignore" "$HARNESS_DIR/.gitignore"
+success ".harness/.gitignore"
+
 cp "$TMPL/HARNESS_SETUP.md" "HARNESS_SETUP.md"
 success "HARNESS_SETUP.md"
 

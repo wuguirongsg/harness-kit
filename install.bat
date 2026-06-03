@@ -69,6 +69,7 @@ if not exist "!TARGET_DIR!\.harness\state"              md "!TARGET_DIR!\.harnes
 call :copy_file "!SCRIPT_DIR!\template\.harness\SESSION_START.md"   "!TARGET_DIR!\.harness\SESSION_START.md"
 call :copy_file "!SCRIPT_DIR!\template\.harness\SESSION_END.md"     "!TARGET_DIR!\.harness\SESSION_END.md"
 call :copy_dir  "!SCRIPT_DIR!\template\.harness\hooks"              "!TARGET_DIR!\.harness\hooks"
+call :copy_file "!SCRIPT_DIR!\template\.harness\gitignore"          "!TARGET_DIR!\.harness\.gitignore"
 call :copy_file "!SCRIPT_DIR!\template\.harness\registry\_index.md" "!TARGET_DIR!\.harness\registry\_index.md"
 
 :: ── product 目录（需求 + 产品方向 + 约束，统一在 backlog.md）──────
