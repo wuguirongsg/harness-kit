@@ -13,6 +13,8 @@
 
 <!-- 新条目追加到这里（上方） -->
 
+[2026-06-03 21:00] RELEASE v0.5.2 打 tag 推送 GitHub，GitHub Actions 自动发布 npm（含 CRLF 修复 + .gitignore + session-end flag 本地化）
+
 [2026-06-03 17:30] FIX upgrade.bat LF→CRLF + chcp 65001 修复 Windows CMD 执行崩溃；install.bat 同步加 chcp 65001；推送 Gitee+GitHub；npm publish v0.5.1 待完成（需先 npm login）
 
 [2026-06-03 16:30] FIX 添加 .harness/.gitignore 排除 .session-end-flag，同步 template/，升版本 v0.5.1，推送 Gitee+GitHub，npm publish 待完成（需先 npm login）
