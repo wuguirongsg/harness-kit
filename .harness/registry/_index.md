@@ -13,6 +13,8 @@
 
 <!-- 新条目追加到这里（上方） -->
 
+[2026-06-03 今日] FIX session-end flag 改为项目本地路径（.harness/.session-end-flag），session-start 清残留 flag，SESSION_START 补 Stop Hook 说明 → commit a7e54b7
+
 [2026-05-04 22:59] DONE session-end 三条路径统一（移除 dirty 检查）+ SESSION_END.md 按阶段重写 + OpenCode 去重改为内存标志 → sessions/2026-05-04-2259.md
 
 [2026-05-04 14:00] DECISION 精简状态文件：删除 vision/constraints/changes 三个孤儿文件，内容合并到 backlog.md；SESSION_START 读取从6文件减至4个 → commit 5b59464
